@@ -35,25 +35,35 @@ Going through a fastqc report
 Single-end, paired ends
 Preparing adaptor fasta file for triming?
 ```
+
 THREADS=16
-READ1=example.R1.fastq.gz
-READ2=example.R2.fastq.gz
+READ_PREFIX=example
 OUTPUT_PREFIX=example
 ADAPTERS=data/00adapters/truseq.fa.gz
 LOG=bbduk.log
 
 module load bbtools/39.06
 bbduk.sh -Xmx1g threads= \
-  in1=${READ1} in2=${READ2} \
-  out1=${OUTPUT_PREFIX}.fq1P out2=${OUTPUT_PREFIX}.fq2P outs=${OUTPUT_PREFIX}.fqU \
+  in1=${READ_PREFIX}.R1.fastq.gz in2=${READ_PREFIX}.R2.fastq.gz \
+  out1=${READ_PREFIX}.paired.R1.fastq.gz out2=${READ_PREFIX}.paired.R2.fastq.gz outs=$${READ_PREFIX}.unpaired.fastq.gz \
   ref=${ADAPTERS} \
   ktrim=r k=23 mink=11 hdist=1 tpe tbo qtrim=rl trimq=20 overwrite=t \
   stats=${LOG}
+
+# Trimmomatic
+MIN_READ_LEN=50
+LEADING_BASES=3
+TRALING_BASES=3
+
+module load trimmomatic
+java -jar $TRIMMOMATIC_JAR PE ${READ_PREFIX}.R1.fastq.gz in2=${READ_PREFIX}.R2.fastq.gz \
+  ${READ_PREFIX}.paired.R1.fastq.gz ${READ_PREFIX}.unpaired.R1.fastq.gz \
+  ${READ_PREFIX}.paired.R2.fastq.gz ${READ_PREFIX}.unpaired.R2.fastq.gz \
+  ILLUMINACLIP:${ADAPTERS}:2:30:10:2:True LEADING:${LEADING_BASES} TRAILING:${TRALING_BASES} MINLEN:${MIN_READ_LEN}
 ```
 
 ### B.3 Dealing with UMIs
 
-5
 
 [UMI-tools](https://umi-tools.readthedocs.io/en/latest/index.html) can handle any UMI tagged sequencing data where deduplication happens after mapping.
 
@@ -65,10 +75,36 @@ The next step depends on whether your technique fragments the cDNA before or aft
 
 Then you group/dedup/count (depending on your downstream application). If fragmentation happened after PCR then you need to do this on a per-gene basis.
 
+```
+# Extract UMI info from reads
+
+module load umitools
+# For Single-end reads
+# umi_tools extract --stdin=${READ_PREFIX}.paired.R1.fastq.gz --bc-pattern=NNNNNNNNN --log=processed.log --stdout ${READ_PREFIX}.umi.fastq.gz 
+# For Paired-end reads
+# umi_tools extract [OPTIONS] -p PATTERN [-I IN_FASTQ[.gz]] [-S OUT_FASTQ[.gz]] --read2-in=IN2_FASTQ[.gz] --read2-out=OUT2_FASTQ[.gz]
+
+READ_PREFIX=example
+OUTPUT_PREFIX=example
+umi_tools extract -I ${READ_PREFIX}.paired.R1.fastq.gz --bc-pattern=NNNXXXXNN --bc-pattern2=NNNXXXXNN \ 
+  --read2-in=${READ_PREFIX}.paired.R2.fastq.gz --stdout=${OUTPUT_PREFIX}.umi.paired.R1.fastq.gz \
+  --read2-out=${OUTPUT_PREFIX}.umi.paired.R2.fastq.gz
+```
 
 ### B.4 Mapping reads 
 
 ```
 module load STAR
+
+```
+
+### B.5 Deduplicate reads
+```
+# Sort bam file
+
+# Index bam file
+
+# If you used UMIs
+umi_tools dedup -I mapped.bam --paired -S deduplicated.bam
 
 ```
