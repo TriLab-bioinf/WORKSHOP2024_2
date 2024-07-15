@@ -35,7 +35,6 @@ Going through a fastqc report
 Single-end, paired ends
 Preparing adaptor fasta file for triming?
 ```
-
 THREADS=16
 READ1=example.R1.fastq.gz
 READ2=example.R2.fastq.gz
