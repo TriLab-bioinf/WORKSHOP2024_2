@@ -45,10 +45,11 @@ LOG=bbduk.log
 
 module load bbtools/39.06
 bbduk.sh -Xmx1g threads= \
-            in1=${READ1} in2=${READ2} \
-            out1=${OUTPUT_PREFIX.fq1P} out2=${OUTPUT_PREFIX.fq2P} outs=${OUTPUT_PREFIX.fqU} \
-            ref=${ADAPTERS} \
-            {params} stats=${LOG}
+  in1=${READ1} in2=${READ2} \
+  out1=${OUTPUT_PREFIX}.fq1P out2=${OUTPUT_PREFIX}.fq2P outs=${OUTPUT_PREFIX}.fqU \
+  ref=${ADAPTERS} \
+  ktrim=r k=23 mink=11 hdist=1 tpe tbo qtrim=rl trimq=20 overwrite=t \
+  stats=${LOG}
 ```
 
 ### B.3 Dealing with UMIs
