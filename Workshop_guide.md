@@ -21,11 +21,26 @@ fastqc -o $OUTDIR $READ1 $READ2
 
 Going through a fastqc report
 
+[Good Illumina data](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/good_sequence_short_fastqc.html)
+
+[Bad Illumina data](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/bad_sequence_fastqc.html)
+
+[Others examples fromt he fastqc website](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 ### B.2 Trimming reads
 
 Single-end, paired ends
-Preparing adaptor fasta file for triiming?
+Preparing adaptor fasta file for triming?
+```
+```
+
+### B.3 Dealing with UMIs
 
 
-### B.3 Mapping reads 
+
+### B.4 Mapping reads 
+
+```
+module load STAR
+
+```
