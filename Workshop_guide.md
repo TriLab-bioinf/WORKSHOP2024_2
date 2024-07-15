@@ -4,9 +4,12 @@
 
 1. Fasta
 2. Fastq
-3. SAM/BAM
-4. GTF/GFF
-5. VCF
+  Forward and reverse
+  Stranded: how to check if seq data is stranded or not?
+  
+4. SAM/BAM
+5. GTF/GFF
+6. VCF
 
 ## B- Proprocessing of sequencing reads
 ### B.1 Quality control of sequencing data 
@@ -36,6 +39,17 @@ Preparing adaptor fasta file for triming?
 
 ### B.3 Dealing with UMIs
 
+5
+
+[UMI-tools](https://umi-tools.readthedocs.io/en/latest/index.html) can handle any UMI tagged sequencing data where deduplication happens after mapping.
+
+The process is to extract the UMIs from the read sequence and add it to the read names. There are two ways to do this, and between them provide the flexibility to handle any read configuration I can think of (see https://umi-tools.readthedocs.io/en/latest/regex.html)
+
+You then map your reads with your favourite mapper.
+
+The next step depends on whether your technique fragments the cDNA before or after PCR. If fragmentation happens after PCR, then the next step is to assign reads to features (e.g. genes) using featureCounts. If PCR happened after fragmentation, then you do the read assignment/quantification after deduping.
+
+Then you group/dedup/count (depending on your downstream application). If fragmentation happened after PCR then you need to do this on a per-gene basis.
 
 
 ### B.4 Mapping reads 
