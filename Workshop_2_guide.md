@@ -14,8 +14,8 @@
 ## B- Proprocessing of sequencing reads
 ### B.1 Quality control of sequencing data 
 ```
-READ1=my_reads.R1.fastq.gz
-READ2=my_reads.R2.fastq.gz
+READ1=example.R1.fastq.gz
+READ2=example.R2.fastq.gz
 OUTDIR=FASTQC
 
 module load fastqc
@@ -35,6 +35,20 @@ Going through a fastqc report
 Single-end, paired ends
 Preparing adaptor fasta file for triming?
 ```
+
+THREADS=16
+READ1=example.R1.fastq.gz
+READ2=example.R2.fastq.gz
+OUTPUT_PREFIX=example
+ADAPTERS=data/00adapters/truseq.fa.gz
+LOG=bbduk.log
+
+module load bbtools/39.06
+bbduk.sh -Xmx1g threads= \
+            in1=${READ1} in2=${READ2} \
+            out1=${OUTPUT_PREFIX.fq1P} out2=${OUTPUT_PREFIX.fq2P} outs=${OUTPUT_PREFIX.fqU} \
+            ref=${ADAPTERS} \
+            {params} stats=${LOG}
 ```
 
 ### B.3 Dealing with UMIs
