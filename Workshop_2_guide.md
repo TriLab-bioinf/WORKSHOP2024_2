@@ -104,12 +104,44 @@ umi_tools extract -I ${READ_PREFIX}.paired.R1.fastq.gz --bc-pattern=NNNXXXXNN --
 ```
 
 ### B.4 Mapping reads 
+sjdbGTFfeatureExon                      exon
+    string: feature type in GTF file to be used as exons for building transcripts
 
+sjdbGTFtagExonParentTranscript          transcript_id
+    string: GTF attribute name for parent transcript ID (default "transcript_id" works for GTF files)
+
+sjdbGTFtagExonParentGene                gene_id
+    string: GTF attribute name for parent gene ID (default "gene_id" works for GTF files)
+
+sjdbGTFtagExonParentGeneName            gene_name
+    string(s): GTF attribute name for parent gene name
+
+sjdbGTFtagExonParentGeneType            gene_type gene_biotype
+    string(s): GTF attribute name for parent gene type
+
+sjdbOverhang                            100
+    int>0: length of the donor/acceptor sequence on each side of the junctions, ideally = (mate_length - 1)
+
+
+
+Create a script named "create_star_index.sh" with the following commands. STAR is pretty memmory intensive and therefore, we will runit with 64G of RAM and 16 CPUs.
 ```
+#!/bin/bash
+#SBATCH --cpus-per-task=16 --mem=64g
+
 module load STAR
 
+# Create genome index
+time STAR --runMode genomeGenerate --runThreadN 16 --genomeDir ./GRCh38.chr1 --sjdbGTFfile ./gencode.v45.annotation.gtf --sjdbGTFfeatureExon exon --sjdbGTFtagExonParentGeneType protein_coding --sjdbOverhang 50 --genomeFastaFiles GRCh38.chr1.fa
 ```
+And then run the script on the Biowulf grid like this:
+```
+# Make script executable
+chmod a+x ./create_star_index.sh
 
+# Run script with sbatch
+sbatch ./create_star_index.sh
+```
 ### B.5 Deduplicate reads
 ```
 # Sort bam file
