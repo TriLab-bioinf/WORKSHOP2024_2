@@ -256,6 +256,7 @@ REFERENCE=/data/$USER/WORKSHOP2024_2/reference
 PREFIX=example
 READ_PATH=/data/$USER/WORKSHOP2024_2/trimming_fastp
 READ2=/data/$USER/WORKSHOP2024_2/example.paired.R2.fastq.gz
+OUTDIR=/data/$USER/WORKSHOP2024_2/mapping_star
 
 module load STAR
 
@@ -266,7 +267,7 @@ STAR --runMode alignReads \
   --alignEndsType EndToEnd \
   --readFilesIn ${READ_PATH}/${PREFIX}.paired.R1.fastq.gz ${READ_PATH}/${PREFIX}.paired.R2.fastq.gz \
   --readFilesCommand zcat \
-  --outFileNamePrefix ${PREFIX} \
+  --outFileNamePrefix ${OUTDIR}/${PREFIX}. \
   --quantMode GeneCounts \
   --outSAMtype BAM SortedByCoordinate \
   --outSAMattributes All
@@ -274,7 +275,7 @@ STAR --runMode alignReads \
 
 ### B.5 Deduplicate reads
 ```
-# Sort bam file
+# Sort bam file by coordinate
 
 GENOME=/data/$USER/WORKSHOP2024_2/data/GRCh38.chr1.fa
 PREFIX=example
