@@ -244,6 +244,36 @@ chmod a+x ./create_star_index.sh
 sbatch ./create_star_index.sh ../data/GRCh38.chr1.fa ../data/gencode.v45.annotation.gtf ../reference 50
 sbatch ./create_star_index.sh
 ```
+
+**Map reads to the reference genome with STAR**
+```
+#!/bin/bash
+#SBATCH --cpus-per-task=16 --mem=32g
+
+# STAR-specific variables
+THREADS=16
+REFERENCE=/data/$USER/WORKSHOP2024_2/reference
+PREFIX=example
+READ_PATH=/data/$USER/WORKSHOP2024_2/trimming_fastp
+READ2=/data/$USER/WORKSHOP2024_2/example.paired.R2.fastq.gz
+
+module load STAR
+
+STAR --runMode alignReads \
+  --runThreadN ${THREADS} \
+  --genomeDir ${REFERENCE} \
+  --alignSJDBoverhangMin 1 \
+  --alignSJoverhangMin 5 \
+  --outFilterMismatchNmax 2 \
+  --alignEndsType EndToEnd \
+  --readFilesIn ${READ_PATH}/${PREFIX}.paired.R1.fastq.gz ${READ_PATH}/${PREFIX}.paired.R2.fastq.gz \
+  --readFilesCommand zcat \
+  --outFileNamePrefix ${PREFIX} \
+  --quantMode GeneCounts \
+  --outSAMtype BAM SortedByCoordinate \
+  --outSAMattributes All
+```
+
 ### B.5 Deduplicate reads
 ```
 # Sort bam file
