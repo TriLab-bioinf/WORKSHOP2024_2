@@ -62,6 +62,7 @@ time bbtools bbduk -Xmx1g threads=${THREADS} \
 ```
 
 **Trimming reads with trimmomatic:**
+
 Create the script trim_reads_tmm.sh in the `script` directory:
 ```
 #!/bin/bash
@@ -89,6 +90,7 @@ time java -jar $TRIMMOMATIC_JAR PE -threads ${THREADS} \
 ```
 
 **Trimming reads with fastp:**
+
 Create the script trim_reads_fastp.sh in the `script` directory:
 ```
 #!/bin/bash
