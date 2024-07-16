@@ -275,7 +275,7 @@ STAR --runMode alignReads \
 ### B.5 Deduplicate reads
 ```
 # Sort bam file
-```
+
 GENOME=/data/$USER/WORKSHOP2024_2/data/GRCh38.chr1.fa
 PREFIX=example
 
