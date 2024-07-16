@@ -28,7 +28,7 @@ Going through a fastqc report
 
 [Bad Illumina data](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/bad_sequence_fastqc.html)
 
-[Others examples fromt he fastqc website](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+[Others examples from the fastqc website](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 ### B.2 Trimming reads
 
