@@ -124,15 +124,27 @@ sjdbOverhang                            100
 
 
 
-Create a script named "create_star_index.sh" with the following commands. STAR is pretty memmory intensive and therefore, we will runit with 64G of RAM and 16 CPUs.
+In the folder "scripts" create a script named "create_star_index.sh" with the following commands. STAR is pretty memmory intensive and therefore, we will runit with 64G of RAM and 16 CPUs.
 ```
 #!/bin/bash
-#SBATCH --cpus-per-task=16 --mem=64g
+#SBATCH --cpus-per-task=16 --mem=32g
+
+GENOME=$1
+GTF=$2
+OUTDIR=$3
+READLEN=$4
 
 module load STAR
 
 # Create genome index
-time STAR --runMode genomeGenerate --runThreadN 16 --genomeDir ./GRCh38.chr1 --sjdbGTFfile ./gencode.v45.annotation.gtf --sjdbGTFfeatureExon exon --sjdbGTFtagExonParentGeneType protein_coding --sjdbOverhang 50 --genomeFastaFiles GRCh38.chr1.fa
+time STAR --runMode genomeGenerate \
+    --runThreadN 16 \
+    --genomeDir ${OUTDIR} \
+    --sjdbGTFfile ${GTF} \
+    --sjdbGTFfeatureExon exon \
+    --sjdbGTFtagExonParentGeneType protein_coding \
+    --sjdbOverhang ${READLEN} \
+    --genomeFastaFiles ${GENOME}
 ```
 And then run the script on the Biowulf grid like this:
 ```
@@ -140,6 +152,7 @@ And then run the script on the Biowulf grid like this:
 chmod a+x ./create_star_index.sh
 
 # Run script with sbatch
+sbatch ./create_star_index.sh ../data/GRCh38.chr1.fa ../data/gencode.v45.annotation.gtf ../reference 50
 sbatch ./create_star_index.sh
 ```
 ### B.5 Deduplicate reads
