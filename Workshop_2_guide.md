@@ -33,7 +33,19 @@ Fastq files can be for single-end or paired-end.
 
 For paired-end data, read-1 is usually `forward` and read-2 is `reverse`.
 
-For RNA-seq experiements, fastq files can be strand-specific (stranded) or not. To check if the sequencing data is stranded or not, you can use the following command:
+For RNA-seq experiements, fastq files can be strand-specific (stranded) or not. To check if the sequencing data is stranded or not, you can use the following command using the `rseqc` Biowulf module:
+
+
+```
+module load rseqc
+infer_experiment.py -i <bam file> -r <gene annotations in bed format>
+
+# Example Output
+Tris is a PairEnd Data
+Fraction of reads failed to determine: 0.057
+Fraction of reads explained by "1++, 1--, 2+-, 2-+": 0.0123
+Fraction of reads explained by "1+-, 1-+, 2++, 2--": 0.9371
+```
 
 
 Forward and reverse
