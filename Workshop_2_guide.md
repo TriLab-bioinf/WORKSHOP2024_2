@@ -66,7 +66,12 @@ java -jar $TRIMMOMATIC_JAR PE ${READ_PREFIX}.R1.fastq.gz in2=${READ_PREFIX}.R2.f
 module load fastp
 fastp -i ${READ_PREFIX}.R1.fastq.gz -I ${READ_PREFIX}.R2.fastq.gz \
   -o ${READ_PREFIX}.paired.R1.fastq.gz -O ${READ_PREFIX}.paired.R2.fastq.gz \
-  --unpaired1 ${READ_PREFIX}.unpaired.R1.fastq.gz --unpaired2 ${READ_PREFIX}.unpaired.R2.fastq.gz
+  --unpaired1 ${READ_PREFIX}.unpaired.R1.fastq.gz --unpaired2 ${READ_PREFIX}.unpaired.R2.fastq.gz \
+  --qualified_quality_phred 20 \
+  --length_required 50 \
+  --adapter_fasta ${ADAPTERS} \
+  --cut_right --cut_mean_quality 20 --cut_window_size 5 \
+  --umi --umi_loc=read1 --umi_len=0
 ```
 
 ### B.3 Dealing with UMIs
