@@ -262,9 +262,7 @@ module load STAR
 STAR --runMode alignReads \
   --runThreadN ${THREADS} \
   --genomeDir ${REFERENCE} \
-  --alignSJDBoverhangMin 1 \
-  --alignSJoverhangMin 5 \
-  --outFilterMismatchNmax 2 \
+  --outFilterMismatchNmax 5 \
   --alignEndsType EndToEnd \
   --readFilesIn ${READ_PATH}/${PREFIX}.paired.R1.fastq.gz ${READ_PATH}/${PREFIX}.paired.R2.fastq.gz \
   --readFilesCommand zcat \
@@ -277,10 +275,22 @@ STAR --runMode alignReads \
 ### B.5 Deduplicate reads
 ```
 # Sort bam file
+```
+GENOME=/data/$USER/WORKSHOP2024_2/data/GRCh38.chr1.fa
+PREFIX=example
+
+samtools sort --threads 8 -O BAM --reference ${GENOME} -T tmp_file -o ${PREFIX}.sorted.bam /data/$USER/WORKSHOP2024_2/${PREFIX}.bam
+```
 
 # Index bam file
 
 # If you used UMIs
 umi_tools dedup -I mapped.bam --paired -S deduplicated.bam
 
+```
+
+### B.6 Count reads per feature
+Count reads as fragments for PE reads
+```
+featureCounts
 ```
