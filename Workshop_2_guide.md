@@ -34,19 +34,19 @@ Going through a fastqc report
 
 Single-end, paired ends
 Preparing adaptor fasta file for triming?
+
+**Trimming reads with bbtools bbduk:**
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
 
-
-THREADS=16
-READ_PREFIX=example
-ADAPTERS=/data/$USER/WORKSHOP2024_2/data/TruSeq3-PE.fa
-READ_PATH=/data/$USER/WORKSHOP2024_2/data
+# Load variables from config file
+source /data/$USER/WORKSHOP2024_2/scripts/config.trimming
 
 # bbtools bbduk ============================
 echo; echo RUNNING BBDUK; echo
 
+# Variables specific to bbduk
 OUTDIR_BBDUK=/data/$USER/WORKSHOP2024_2/trimming_bbduk
 LOG=bbduk.log
 
@@ -57,11 +57,20 @@ time bbtools bbduk -Xmx1g threads=${THREADS} \
   ref=${ADAPTERS} \
   ktrim=r k=23 mink=11 hdist=1 tpe tbo qtrim=rl trimq=20 overwrite=t \
   stats=${LOG}
+```
+
+**Trimming reads with trimmomatic:**
+```
+#!/bin/bash
+#SBATCH --cpus-per-task=16
 
 # Trimmomatic ============================
 echo; echo RUNNING TRIMMOMATIC; echo
 
-MIN_READ_LEN=25
+# Load variables from config file
+source /data/$USER/WORKSHOP2024_2/scripts/config.trimming
+
+# Variables specific to trimmomatic
 LEADING_BASES=0
 TRALING_BASES=0
 OUTDIR_TMM=/data/$USER/WORKSHOP2024_2/trimming_tmm
@@ -74,10 +83,20 @@ time java -jar $TRIMMOMATIC_JAR PE -threads ${THREADS} \
   ${OUTDIR_TMM}/${READ_PREFIX}.paired.R1.fastq.gz ${OUTDIR_TMM}/${READ_PREFIX}.unpaired.R1.fastq.gz \
   ${OUTDIR_TMM}/${READ_PREFIX}.paired.R2.fastq.gz ${OUTDIR_TMM}/${READ_PREFIX}.unpaired.R2.fastq.gz \
   ILLUMINACLIP:${ADAPTERS}:2:30:10:2:True LEADING:${LEADING_BASES} TRAILING:${TRALING_BASES} MINLEN:${MIN_READ_LEN}
+```
+
+**Trimming reads with fastp:**
+```
+#!/bin/bash
+#SBATCH --cpus-per-task=16
 
 # Fastp ============================
 echo; echo RUNNING FASTP; echo
 
+# Load variables from config file
+source /data/$USER/WORKSHOP2024_2/scripts/config.trimming
+
+# Variables specific to fastp
 OUTDIR_FASTP=/data/$USER/WORKSHOP2024_2/trimming_fastp
 
 mkdir ${OUTDIR_FASTP}
