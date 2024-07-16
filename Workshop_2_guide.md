@@ -52,14 +52,21 @@ bbduk.sh -Xmx1g threads= \
 
 # Trimmomatic
 MIN_READ_LEN=50
-LEADING_BASES=3
-TRALING_BASES=3
+LEADING_BASES=0
+TRALING_BASES=0
 
 module load trimmomatic
 java -jar $TRIMMOMATIC_JAR PE ${READ_PREFIX}.R1.fastq.gz in2=${READ_PREFIX}.R2.fastq.gz \
   ${READ_PREFIX}.paired.R1.fastq.gz ${READ_PREFIX}.unpaired.R1.fastq.gz \
   ${READ_PREFIX}.paired.R2.fastq.gz ${READ_PREFIX}.unpaired.R2.fastq.gz \
   ILLUMINACLIP:${ADAPTERS}:2:30:10:2:True LEADING:${LEADING_BASES} TRAILING:${TRALING_BASES} MINLEN:${MIN_READ_LEN}
+
+# Fastp
+
+module load fastp
+fastp -i ${READ_PREFIX}.R1.fastq.gz -I ${READ_PREFIX}.R2.fastq.gz \
+  -o ${READ_PREFIX}.paired.R1.fastq.gz -O ${READ_PREFIX}.paired.R2.fastq.gz \
+  --unpaired1 ${READ_PREFIX}.unpaired.R1.fastq.gz --unpaired2 ${READ_PREFIX}.unpaired.R2.fastq.gz
 ```
 
 ### B.3 Dealing with UMIs
