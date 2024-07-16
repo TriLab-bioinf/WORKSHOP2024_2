@@ -36,6 +36,8 @@ Single-end, paired ends
 Preparing adaptor fasta file for triming?
 
 **Trimming reads with bbtools bbduk:**
+
+Create the script trim_reads_bbduk.sh in the `script` directory:
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
@@ -60,6 +62,7 @@ time bbtools bbduk -Xmx1g threads=${THREADS} \
 ```
 
 **Trimming reads with trimmomatic:**
+Create the script trim_reads_tmm.sh in the `script` directory:
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
@@ -86,6 +89,7 @@ time java -jar $TRIMMOMATIC_JAR PE -threads ${THREADS} \
 ```
 
 **Trimming reads with fastp:**
+Create the script trim_reads_fastp.sh in the `script` directory:
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
