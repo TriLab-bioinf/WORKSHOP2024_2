@@ -35,43 +35,63 @@ Going through a fastqc report
 Single-end, paired ends
 Preparing adaptor fasta file for triming?
 ```
+#!/bin/bash
+#SBATCH --cpus-per-task=16
+
 
 THREADS=16
 READ_PREFIX=example
-OUTPUT_PREFIX=example
-ADAPTERS=data/00adapters/truseq.fa.gz
+ADAPTERS=/data/$USER/WORKSHOP2024_2/data/TruSeq3-PE.fa
+READ_PATH=/data/$USER/WORKSHOP2024_2/data
+
+# bbtools bbduk ============================
+echo; echo RUNNING BBDUK; echo
+
+OUTDIR_BBDUK=/data/$USER/WORKSHOP2024_2/trimming_bbduk
 LOG=bbduk.log
 
 module load bbtools/39.06
-bbduk.sh -Xmx1g threads= \
-  in1=${READ_PREFIX}.R1.fastq.gz in2=${READ_PREFIX}.R2.fastq.gz \
-  out1=${READ_PREFIX}.paired.R1.fastq.gz out2=${READ_PREFIX}.paired.R2.fastq.gz outs=$${READ_PREFIX}.unpaired.fastq.gz \
+time bbtools bbduk -Xmx1g threads=${THREADS} \
+  in1=${READ_PATH}/${READ_PREFIX}.R1.fastq.gz in2=${READ_PATH}/${READ_PREFIX}.R2.fastq.gz \
+  out1=${OUTDIR_BBDUK}/${READ_PREFIX}.paired.R1.fastq.gz out2=${OUTDIR_BBDUK}/${READ_PREFIX}.paired.R2.fastq.gz outs=${OUTDIR_BBDUK}/${READ_PREFIX}.unpaired.fastq.gz \
   ref=${ADAPTERS} \
   ktrim=r k=23 mink=11 hdist=1 tpe tbo qtrim=rl trimq=20 overwrite=t \
   stats=${LOG}
 
-# Trimmomatic
-MIN_READ_LEN=50
+# Trimmomatic ============================
+echo; echo RUNNING TRIMMOMATIC; echo
+
+MIN_READ_LEN=25
 LEADING_BASES=0
 TRALING_BASES=0
+OUTDIR_TMM=/data/$USER/WORKSHOP2024_2/trimming_tmm
+
+mkdir ${OUTDIR_TMM}
 
 module load trimmomatic
-java -jar $TRIMMOMATIC_JAR PE ${READ_PREFIX}.R1.fastq.gz in2=${READ_PREFIX}.R2.fastq.gz \
-  ${READ_PREFIX}.paired.R1.fastq.gz ${READ_PREFIX}.unpaired.R1.fastq.gz \
-  ${READ_PREFIX}.paired.R2.fastq.gz ${READ_PREFIX}.unpaired.R2.fastq.gz \
+time java -jar $TRIMMOMATIC_JAR PE -threads ${THREADS} \
+  ${READ_PATH}/${READ_PREFIX}.R1.fastq.gz ${READ_PATH}/${READ_PREFIX}.R2.fastq.gz \
+  ${OUTDIR_TMM}/${READ_PREFIX}.paired.R1.fastq.gz ${OUTDIR_TMM}/${READ_PREFIX}.unpaired.R1.fastq.gz \
+  ${OUTDIR_TMM}/${READ_PREFIX}.paired.R2.fastq.gz ${OUTDIR_TMM}/${READ_PREFIX}.unpaired.R2.fastq.gz \
   ILLUMINACLIP:${ADAPTERS}:2:30:10:2:True LEADING:${LEADING_BASES} TRAILING:${TRALING_BASES} MINLEN:${MIN_READ_LEN}
 
-# Fastp
+# Fastp ============================
+echo; echo RUNNING FASTP; echo
+
+OUTDIR_FASTP=/data/$USER/WORKSHOP2024_2/trimming_fastp
+
+mkdir ${OUTDIR_FASTP}
 
 module load fastp
-fastp -i ${READ_PREFIX}.R1.fastq.gz -I ${READ_PREFIX}.R2.fastq.gz \
-  -o ${READ_PREFIX}.paired.R1.fastq.gz -O ${READ_PREFIX}.paired.R2.fastq.gz \
-  --unpaired1 ${READ_PREFIX}.unpaired.R1.fastq.gz --unpaired2 ${READ_PREFIX}.unpaired.R2.fastq.gz \
+time fastp -i ${READ_PATH}/${READ_PREFIX}.R1.fastq.gz -I ${READ_PATH}/${READ_PREFIX}.R2.fastq.gz \
+  -o ${OUTDIR_FASTP}/${READ_PREFIX}.paired.R1.fastq.gz -O ${OUTDIR_FASTP}/${READ_PREFIX}.paired.R2.fastq.gz \
+  --unpaired1 ${OUTDIR_FASTP}/${READ_PREFIX}.unpaired.R1.fastq.gz --unpaired2 ${OUTDIR_FASTP}/${READ_PREFIX}.unpaired.R2.fastq.gz \
   --qualified_quality_phred 20 \
-  --length_required 50 \
+  --length_required ${MIN_READ_LEN} \
   --adapter_fasta ${ADAPTERS} \
   --cut_right --cut_mean_quality 20 --cut_window_size 5 \
-  --umi --umi_loc=read1 --umi_len=0
+  --thread ${THREADS} \
+  --umi --umi_loc=read1 --umi_len=8
 ```
 
 ### B.3 Dealing with UMIs
@@ -97,10 +117,10 @@ module load umitools
 # umi_tools extract [OPTIONS] -p PATTERN [-I IN_FASTQ[.gz]] [-S OUT_FASTQ[.gz]] --read2-in=IN2_FASTQ[.gz] --read2-out=OUT2_FASTQ[.gz]
 
 READ_PREFIX=example
-OUTPUT_PREFIX=example
+
 umi_tools extract -I ${READ_PREFIX}.paired.R1.fastq.gz --bc-pattern=NNNXXXXNN --bc-pattern2=NNNXXXXNN \ 
-  --read2-in=${READ_PREFIX}.paired.R2.fastq.gz --stdout=${OUTPUT_PREFIX}.umi.paired.R1.fastq.gz \
-  --read2-out=${OUTPUT_PREFIX}.umi.paired.R2.fastq.gz
+  --read2-in=${READ_PREFIX}.paired.R2.fastq.gz --stdout=${READ_PREFIX}.umi.paired.R1.fastq.gz \
+  --read2-out=${READ_PREFIX}.umi.paired.R2.fastq.gz
 ```
 
 ### B.4 Mapping reads 
