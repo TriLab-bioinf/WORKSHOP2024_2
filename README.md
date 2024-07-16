@@ -13,4 +13,5 @@
   . Counting reads or fragments
   . Dealing with multimappers   
 8. SNP/INDEL calls and annotation.
-9. MultiQC to summarize program outputs. (example of rRNA contamination from yeast RNAseq from Orna - Report from the STAR mappings - see ppt in figures folder), )
+9. Generation of wig, bigwig, (tdf and bed ??) files from bam files 
+10. MultiQC to summarize program outputs. (example of rRNA contamination from yeast RNAseq from Orna - Report from the STAR mappings - see ppt in figures folder), )
