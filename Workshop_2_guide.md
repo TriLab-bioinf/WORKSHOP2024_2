@@ -193,6 +193,9 @@ umi_tools extract -I ${READ_PREFIX}.paired.R1.fastq.gz --bc-pattern=NNNXXXXNN --
 ```
 
 ### B.4 Mapping reads 
+
+Note: mention HTSeq2
+
 sjdbGTFfeatureExon                      exon
     string: feature type in GTF file to be used as exons for building transcripts
 
