@@ -5,7 +5,8 @@ Bwa-mem2 is the next version of the bwa-mem algorithm in bwa. It produces alignm
 
 1.1.	Index the reference (genome) sequence 
 ```
-bwa-mem2 index [-p prefix] <in.fasta> ##on biowulf, we can find pre-index genome: /fdb/bwa-mem2/hg38/genome.fa
+bwa-mem2 index [-p prefix] <in.fasta>
+##on biowulf, we can find pre-index genome: /fdb/bwa-mem2/hg38/genome.fa
 ```
 
 1.2.	Perform the alignment 
