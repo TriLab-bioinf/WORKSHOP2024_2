@@ -93,6 +93,7 @@ bedtools bamtobed [OPTIONS] -i <bam>
 
 ### wig: computes average alignment or feature density for over a specified window size across the genome
 ```
+module load IGVTools
 igvtools count NA12878.bam NA12878.wig hg38.fa
 ```
 
@@ -109,5 +110,9 @@ wigToBigWig in.wig chrom.sizes out.bw
 
 
 ## IGV visualization
+```
+module load IGV IGVTools
+igv --memory 20g
+```
 
 
