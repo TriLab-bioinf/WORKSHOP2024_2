@@ -30,7 +30,8 @@ bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls
 ```
 
 ● bcftools mpileup 
- Collects summary information in the input BAMs, computes the likelihood of data given each possible genotype and stores the likelihoods in the BCF format. 
+ Collects summary information in the input BAMs, computes the likelihood of data given each possible genotype and stores the likelihoods in the BCF format.
+ 
 ● bcftools call 
  Applies the prior and does the actual calling.
 
