@@ -3,12 +3,12 @@
 1)	Align reads to reference (using BWA)
 Bwa-mem2 is the next version of the bwa-mem algorithm in bwa. It produces alignment identical to bwa and is ~1.3-3.1x faster depending on the use-case, dataset and the running machine.
 
-1.	Index the reference (genome) sequence 
+1.1.	Index the reference (genome) sequence 
 ```
 bwa-mem2 index [-p prefix] <in.fasta> ##on biowulf, we can find pre-index genome: /fdb/bwa-mem2/hg38/genome.fa
 ```
 
-2.	Perform the alignment 
+1.2.	Perform the alignment 
 ```
 bwa-mem2 mem -t 32 \
         -R "@RG\tID:$id\tPL:ILLUMINA\tLB:$lb\tSM:$sm" \
