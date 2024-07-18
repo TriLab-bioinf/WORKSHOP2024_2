@@ -167,12 +167,19 @@ chr1	24866346	.	G	T	30.4183	PASS	DP=2;SGB=-0.379885;MQ0F=0;AC=2;AN=2;DP4=0,0,0,1
 In a nutshell, VCF format is tab-separated text file having the following columns:
 
 Chromosome name
+
 Position
+
 Variant's ID
+
 Reference genome
+
 Alternative (i.e. variant)
+
 Quality score
+
 Filter (whether or not the variant passed quality filters)
+
 INFO : Generic information about this variant. SnpEff adds annotation information in this column.
  
 ## Bam files conversion to wig, bigwig and tdf
