@@ -2,6 +2,7 @@
 
 ### 1) Quality Control
 1.1 Fastqc
+
 1.2 trimmomatic
 ```
 #!/bin/bash
@@ -15,17 +16,16 @@ java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads $SLURM_CPUS_PER_TAS
 ```
 
 ### 2)	Align reads to reference (using BWA)
-Bwa-mem2 is the next version of the bwa-mem algorithm in bwa. It produces alignment identical to bwa and is ~1.3-3.1x faster depending on the use-case, dataset and the running machine.
-
 2.1.	Index the reference (genome) sequence 
 ```
-bwa-mem2 index [-p prefix] <in.fasta>
-##on biowulf, we can find pre-index genome: /fdb/bwa-mem2/hg38/genome.fa
+module load bwa
+bwa index hg38_chr17.fa
 ```
 
 2.2.	Perform the alignment 
 ```
-bwa-mem2 mem -t 32 \
+genome=hg38_chr17.fa
+bwa mem -t 32 \
         -R "@RG\tID:$id\tPL:ILLUMINA\tLB:$lb\tSM:$sm" \
         $genome \
         output_forward_paired.fq.gz \
