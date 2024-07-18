@@ -2,9 +2,6 @@
 ![pipeline](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/pipeline.jpg)
 
 
-
-
-
 ### 1) Quality Control
 1.1 Fastqc
 
@@ -20,7 +17,7 @@ java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads $SLURM_CPUS_PER_TAS
     SLIDINGWINDOW:4:15 MINLEN:36
 ```
 
-### 2)	Align reads to reference (using BWA)
+### 2)	Mapping (using BWA)
 2.1.	Index the reference (genome) sequence 
 ```
 module load bwa
