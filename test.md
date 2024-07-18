@@ -31,7 +31,6 @@ bwa mem -t 32 \
         output_forward_paired.fq.gz \
         output_reverse_paired.fq.gz \
         | samtools sort \
-        -m 1706M \
         -@ 12 \
         -O BAM \
         -o ERR194160_bwa_sorted.bam \
