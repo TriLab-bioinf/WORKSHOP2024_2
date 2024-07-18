@@ -39,7 +39,8 @@ bwa mem -t 32 \
 
 ### 3) Mark Duplicates
 ```
-java -jar picard.jar MarkDuplicates \
+module load picard
+java -Xmx4g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
 CREATE_INDEX=true \
 INPUT=<input.bam> \
 VALIDATION_STRINGENCY=STRICT
