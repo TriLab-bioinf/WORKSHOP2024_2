@@ -61,18 +61,18 @@ You should see now a new directory named `WORKSHOP2024_2`. Go to that directory 
 
 **Step 2:**
 
-Create a variable named `WORKSHOPDIR` with the path of your WORKSHOP2024_2 directory. We will use this variable during the processing of sequencing reads:
+Create an environmental variable named `WORKSHOPDIR` with the path of your WORKSHOP2024_2 directory. We will use this variable during the processing of sequencing reads:
 ```
-WORKSHOPDIR=/data/$USER/WORKSHOP2024_2
+export WORKSHOPDIR=/data/$USER/WORKSHOP2024_2
 ```
 
 
-## B- Proprocessing of sequencing reads for RNAseq analysis
+## C- Proprocessing of sequencing reads for RNAseq analysis
 
-### B.1 Workflow:
+### C.1 Workflow:
 ![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/RNAseq.png)
 
-### B.2 Quality control of sequencing data 
+### C.2 Quality control of sequencing data 
 Before you start processing your sequencing files it is important to first check the quality of the sequencing data. Among the things we want to check for are:
 1. Total number of reads per file 
 2. Read base quality along reads
@@ -90,16 +90,26 @@ Create a script named `01-fastqc.sh` with your favorite editor containing the fo
 #!/bin/bash
 #SBATCH --cpus-per-task=16
 
-READ1=${WORKSHOPDIR}/data/example.R1.fastq.gz
-READ2=${WORKSHOPDIR}/data/example.R2.fastq.gz
-OUTDIR=FASTQC
+# Enter path to read files from STDIN 
+READ1=$1
+READ2=$2
+
+# Set name of output directory
+OUTDIR=Step1-fastqc
+
+# Create output directory
+mkdir -p $OUTDIR
 
 module load fastqc
 fastqc -o $OUTDIR $READ1 $READ2
 ```
 **Note:** Remember to make the script execulatble with `chmod +x 01-fastqc.sh`.
 
-Now run the script like this
+
+Now run the script like this:
+```
+./01-fastqc.sh ${WORKSHOPDIR}/data/example.R1.fastq.gz ${WORKSHOPDIR}/data/example.R2.fastq.gz
+```
 
 Going through a fastqc report
 
