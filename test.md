@@ -53,10 +53,12 @@ VALIDATION_STRINGENCY=STRICT
 bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls.vcf.gz
 ```
 
-● bcftools mpileup 
+● bcftools mpileup
+
  Collects summary information in the input BAMs, computes the likelihood of data given each possible genotype and stores the likelihoods in the BCF format.
  
-● bcftools call 
+● bcftools call
+
  Applies the prior and does the actual calling.
 
 ### 5) Filter SNPs 
