@@ -144,7 +144,7 @@ convert2bed --input=fmt [--output=fmt] [options] < input > output
 
 ## IGV visualization
 ```
-module load IGV IGVTools
+module load IGV
 igv --memory 20g
 ```
 
