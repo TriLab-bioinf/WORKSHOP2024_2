@@ -47,7 +47,11 @@ Fraction of reads explained by "1++, 1--, 2+-, 2-+": 0.0123
 Fraction of reads explained by "1+-, 1-+, 2++, 2--": 0.9371
 ```
 
-## B- Proprocessing of sequencing reads
+## B- Proprocessing of sequencing reads for RNAseq analysis
+
+### B.1 Workflow:
+![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/RNAseq.png)
+
 ### B.1 Quality control of sequencing data 
 ```
 READ1=example.R1.fastq.gz
