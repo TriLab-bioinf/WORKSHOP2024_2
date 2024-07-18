@@ -52,8 +52,25 @@ Fraction of reads explained by "1+-, 1-+, 2++, 2--": 0.9371
 ### B.1 Workflow:
 ![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/RNAseq.png)
 
-### B.1 Quality control of sequencing data 
+### B.2 Quality control of sequencing data 
+Before you start processing your sequencing files it is important to first check the quality of the sequencing data. Among the things we want to check for are:
+1. Total number of reads per file 
+2. Read base quality along reads
+3. Presence of sequencing adaptors
+4. GC-content
+5. Distribution of bases [ACGT] along reads
+6. Distribution of overrepresented sequences
+
+There are several tools that you can use for this. In our case we will you a program called `fastqc`.
+
+**Step 1:**
+
+Create a script named `01-fastqc.sh` with the following code:
 ```
+#!/bin/bash
+#SBATCH --cpus-per-task=16
+
+
 READ1=example.R1.fastq.gz
 READ2=example.R2.fastq.gz
 OUTDIR=FASTQC
@@ -61,6 +78,7 @@ OUTDIR=FASTQC
 module load fastqc
 fastqc -o $OUTDIR $READ1 $READ2
 ```
+**Note:** Remember to make the script execulatble with `chmod +x 01-fastqc.sh`.
 
 Going through a fastqc report
 
