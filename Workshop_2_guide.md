@@ -278,7 +278,7 @@ STAR --runMode alignReads \
   --alignEndsType EndToEnd \
   --readFilesIn ${READ1} ${READ2} \
   --readFilesCommand zcat \
-  --outFileNamePrefix ${OUTDIR}/${PREFIX}. \
+  --outFileNamePrefix ${OUTDIR}/${PREFIX}.sorted. \
   --quantMode GeneCounts \
   --outSAMtype BAM SortedByCoordinate \
   --outSAMattributes All &> ${OUTDIR}/star.log
@@ -296,24 +296,40 @@ STAR wil output the bam file `example.bam` containing read mapping information.
 
 ### B.5 Deduplicate reads
 
-The next step requires the bam file to be sorted by read coordinates and indexed. In our case, STAR sorted the reads during the mapping step, but it that wasn't the case, then you can sort the bam file by read coordinate using samtools and the following command:
+The next step requires the bam file to be sorted by read coordinates and indexed. In our case, STAR sorted the reads during the mapping step, but if that wasn't the case, then you can sort the bam file by read coordinate using samtools and the following command:
 ```
 # Sort bam file by coordinate
 
 GENOME=${WORSHOPDIR}/data/GRCh38.chr17.fa
 PREFIX=example
+UNSORTED_BAM=$(WORKSHOPDIR}/Step4-mapping_star/${PREFIX}.bam
 
-samtools sort --threads 8 -O BAM --reference ${GENOME} -T tmp_file -o ${PREFIX}.sorted.bam /data/$USER/WORKSHOP2024_2/${PREFIX}.bam
+module load samtools
+
+samtools sort --threads 8 \
+  -O BAM \
+  --reference ${GENOME} \
+  -T tmp_file \
+  -o $(WORKSHOPDIR}/Step4-mapping_star/${PREFIX}.sorted.bam \
+  ${UNSORTED_BAM}
 ```
 
-# Index bam file
+**Step 3:**
+
+Once the bam file is sorted, it is necessary to create an index of it. FOr this we will use the followig `samtools` command:
+```
+module load samtools
+
+samtools index $(WORKSHOPDIR}/Step4-mapping_star/example.sorted.bam
+```
+
 
 # If you used UMIs
 umi_tools dedup -I mapped.bam --paired -S deduplicated.bam
 
 ```
 #!/bin/bash
-#SBATCH --cpus-per-task=16 --mem=32g
+#SBATCH --cpus-per-task=5 --mem=32g --gres=lscratch:40
 
 # Flag duplicated reads with Picard
 module load picard/3.2.0
@@ -331,6 +347,12 @@ java -Xmx32g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicat
   --REMOVE_DUPLICATES false \
   --CREATE_INDEX true \
   --TMP_DIR /lscratch/$SLURM_JOBID
+
+```
+Run the 05-mark_duplicates.sh script remotely with sbatch:
+```
+sbatch lscratch:40
+```
 
 
 samtools index {output}
