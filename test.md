@@ -1,4 +1,6 @@
 ## SNP identification
+![SNP_calling_pipeline](https://github.com/user-attachments/assets/104c0a57-055f-4e57-9a0e-87aafe6d05eb)
+
 
 ### 1) Quality Control
 1.1 Fastqc
