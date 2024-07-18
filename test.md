@@ -83,8 +83,23 @@ bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls
  Applies the prior and does the actual calling. The -m switch tells the program to use the default calling method, the -v option asks to output only variant sites, finally the -O option selects the output format.
 
 ### 5) Filter SNPs 
+Variant filtering is not easy. The variant callers provide a quality score (the QUAL) column, which gives an estimate of how likely it is to observe a call purely by chance. An easy way to filter low quality calls is
 ```
 bcftools filter -i'%QUAL>20' calls.vcf.gz -O z -o my.var-final.vcf.gz
+```
+Other useful metrics are:
+
+sequencing depth (DP bigger than twice the average depth indicates problematic regions and is often enriched for artefacts)
+
+the minimum number of high-quality non-reference reads
+
+proximity to indels (bcftools filter -g)
+
+etc.
+
+To give a concrete example, the following filter seemed to work quite well for one particular dataset (human data, exomes):
+
+```
 bcftools filter -sLowQual -g3 -G10 \
     -e'%QUAL<10 || (RPB<0.1 && %QUAL<15) || (AC<2 && %QUAL<15) || %MAX(DV)<=3 || %MAX(DV)/%MAX(DP)<=0.3' \
     calls.vcf.gz
