@@ -58,6 +58,7 @@ cd /data/$USER/
 git clone https://github.com/TriLab-bioinf/WORKSHOP2024_2.git
 ```
 You should see now a new directory named `WORKSHOP2024_2`. Go to that directory `cd WORKSHOP2024_2` and check the content of it by typing `tree`.
+
 **Step 2:**
 
 Create a variable named `WORKSHOPDIR` with the path of your WORKSHOP2024_2 directory. We will use this variable during the processing of sequencing reads:
