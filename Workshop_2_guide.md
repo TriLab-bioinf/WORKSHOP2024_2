@@ -51,6 +51,13 @@ Fraction of reads explained by "1+-, 1-+, 2++, 2--": 0.9371
 
 **Step 1:**
 
+Login into Biowulf and start a new interactive session having 8 CPUs and 16GB of memory like so:
+```
+sinteractive --cpus-per-task=8 --mem=16g --time=3:00:00
+```
+
+**Step 2:**
+
 Download the `WORKSHOP2024_2` data from the Workshop's GitHub repository into your Biowulf data directory like so:
 ```
 cd /data/$USER/
@@ -59,7 +66,7 @@ git clone https://github.com/TriLab-bioinf/WORKSHOP2024_2.git
 ```
 You should see now a new directory named `WORKSHOP2024_2`. Go to that directory `cd WORKSHOP2024_2` and check the content of it by typing `tree`.
 
-**Step 2:**
+**Step 3:**
 
 Create an environmental variable named `WORKSHOPDIR` with the path of your WORKSHOP2024_2 directory. We will use this variable during the processing of sequencing reads:
 ```
@@ -88,7 +95,7 @@ There are several tools that you can use for this. In our case we will you a pro
 Create a script named `01-fastqc.sh` with your favorite editor containing the following code:
 ```
 #!/bin/bash
-#SBATCH --cpus-per-task=16
+#SBATCH
 
 # Enter path to read files from STDIN 
 READ1=$1
@@ -106,12 +113,25 @@ fastqc -o $OUTDIR $READ1 $READ2
 **Note:** Remember to make the script execulatble with `chmod +x 01-fastqc.sh`.
 
 
-Now run the script like this:
+Now run the script localy like this:
 ```
 ./01-fastqc.sh ${WORKSHOPDIR}/data/example.R1.fastq.gz ${WORKSHOPDIR}/data/example.R2.fastq.gz
 ```
+You can also have tried to run the same script remotely on a Biowulf node like this:
+```
+sbatch ./01-fastqc.sh ${WORKSHOPDIR}/data/example.R1.fastq.gz ${WORKSHOPDIR}/data/example.R2.fastq.gz
+```
 
-Going through a fastqc report
+Now you should see the new directory `Step1-fastqc` containing the fastq output. In particular we are interested in the html report files named `example.R1_fastqc.html` and `example.R2_fastqc.html`. You can open them in a browser. To do so, first you need to link your Biowulf directories to the ones in your computer like so:
+
+1. For Macs, go to Finder > Go > Connect to Server
+2. Enter `smb://hpcdrive.nih.gov/data`
+3. press `Connect`
+
+A new Finder Windows should appear showing your Biowulf data directory. Navigate to the fastqc report files into `WORKSHOP2024_2/Step1-fastqc/` and open one of the html reports. How the reads look like?
+
+
+Other examples of fastqc reports:
 
 [Good Illumina data](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/good_sequence_short_fastqc.html)
 
@@ -119,145 +139,78 @@ Going through a fastqc report
 
 [Others examples from the fastqc website](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
-### B.2 Trimming reads
+### C.3 Trimming reads
 
-Single-end, paired ends
-Preparing adaptor fasta file for triming?
+During this step we will try to accomplish the following:
 
-**Trimming reads with bbtools bbduk:**
-
-Create the script trim_reads_bbduk.sh in the `script` directory:
-```
-#!/bin/bash
-#SBATCH --cpus-per-task=16
-
-# Load variables from config file
-source /data/$USER/WORKSHOP2024_2/scripts/config.trimming
-
-# bbtools bbduk ============================
-echo; echo RUNNING BBDUK; echo
-
-# Variables specific to bbduk
-OUTDIR_BBDUK=/data/$USER/WORKSHOP2024_2/trimming_bbduk
-LOG=bbduk.log
-
-module load bbtools/39.06
-time bbtools bbduk -Xmx1g threads=${THREADS} \
-  in1=${READ_PATH}/${READ_PREFIX}.R1.fastq.gz in2=${READ_PATH}/${READ_PREFIX}.R2.fastq.gz \
-  out1=${OUTDIR_BBDUK}/${READ_PREFIX}.paired.R1.fastq.gz out2=${OUTDIR_BBDUK}/${READ_PREFIX}.paired.R2.fastq.gz outs=${OUTDIR_BBDUK}/${READ_PREFIX}.unpaired.fastq.gz \
-  ref=${ADAPTERS} \
-  ktrim=r k=23 mink=11 hdist=1 tpe tbo qtrim=rl trimq=20 overwrite=t \
-  stats=${LOG}
-```
-
-**Trimming reads with trimmomatic:**
-
-Create the script trim_reads_tmm.sh in the `script` directory:
-```
-#!/bin/bash
-#SBATCH --cpus-per-task=16
-
-# Trimmomatic ============================
-echo; echo RUNNING TRIMMOMATIC; echo
-
-# Load variables from config file
-source /data/$USER/WORKSHOP2024_2/scripts/config.trimming
-
-# Variables specific to trimmomatic
-LEADING_BASES=0
-TRALING_BASES=0
-OUTDIR_TMM=/data/$USER/WORKSHOP2024_2/trimming_tmm
-
-mkdir ${OUTDIR_TMM}
-
-module load trimmomatic
-time java -jar $TRIMMOMATIC_JAR PE -threads ${THREADS} \
-  ${READ_PATH}/${READ_PREFIX}.R1.fastq.gz ${READ_PATH}/${READ_PREFIX}.R2.fastq.gz \
-  ${OUTDIR_TMM}/${READ_PREFIX}.paired.R1.fastq.gz ${OUTDIR_TMM}/${READ_PREFIX}.unpaired.R1.fastq.gz \
-  ${OUTDIR_TMM}/${READ_PREFIX}.paired.R2.fastq.gz ${OUTDIR_TMM}/${READ_PREFIX}.unpaired.R2.fastq.gz \
-  ILLUMINACLIP:${ADAPTERS}:2:30:10:2:True LEADING:${LEADING_BASES} TRAILING:${TRALING_BASES} MINLEN:${MIN_READ_LEN}
-```
+1. To trim reads based on their sequencing quality by chopping off the portions of the read that falls below a particular quality cutoff (usually a value between 20-30).
+2. Cut bases at the ends of the read that might be consistently low quality.
+3. Remove contaminating sequencing adapters, usually from 3'end of reads.
+4. Move UMI sequences, is present, from the read sequence to the fastq header.
 
 **Trimming reads with fastp:**
 
-Create the script trim_reads_fastp.sh in the `script` directory:
+Create the script `02-trim_reads_fastp.sh` with the following code:
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
 
-# Fastp ============================
 echo; echo RUNNING FASTP; echo
 
-# Load variables from config file
-source /data/$USER/WORKSHOP2024_2/scripts/config.trimming
+# Load read files from the command line
+READ1=$1
+READ2=$2
 
-# Variables specific to fastp
-OUTDIR_FASTP=/data/$USER/WORKSHOP2024_2/trimming_fastp
+# Load some other variables used by fastp
+ADAPTERS=${WORKSHOPDIR}/data/TruSeq3-PE.fa
+THREADS=16
+OUTDIR_FASTP=${WORKSHOPDIR}/Step2-trimming_fastp
+READNAME=$(basename ${READ1})
+PREFIX=${READNAME%.R1.fastq.gz}
 
-mkdir ${OUTDIR_FASTP}
+# Create output directory
+mkdir -p ${OUTDIR_FASTP}
 
+# Run fastp
 module load fastp
-time fastp -i ${READ_PATH}/${READ_PREFIX}.R1.fastq.gz -I ${READ_PATH}/${READ_PREFIX}.R2.fastq.gz \
-  -o ${OUTDIR_FASTP}/${READ_PREFIX}.paired.R1.fastq.gz -O ${OUTDIR_FASTP}/${READ_PREFIX}.paired.R2.fastq.gz \
-  --unpaired1 ${OUTDIR_FASTP}/${READ_PREFIX}.unpaired.R1.fastq.gz --unpaired2 ${OUTDIR_FASTP}/${READ_PREFIX}.unpaired.R2.fastq.gz \
+fastp -i ${READ1} -I ${READ2} \
+  -o ${OUTDIR_FASTP}/${PREFIX}.paired.R1.fastq.gz -O ${OUTDIR_FASTP}/${PREFIX}.paired.R2.fastq.gz \
+  --unpaired1 ${OUTDIR_FASTP}/${PREFIX}.unpaired.R1.fastq.gz --unpaired2 ${OUTDIR_FASTP}/${PREFIX}.unpaired.R2.fastq.gz \
   --qualified_quality_phred 20 \
-  --length_required ${MIN_READ_LEN} \
+  --length_required 25 \
   --adapter_fasta ${ADAPTERS} \
+  --trim_front1 1 \
+  --trim_front2 1 \
   --cut_right --cut_mean_quality 20 --cut_window_size 5 \
-  --thread ${THREADS} \
-  --umi --umi_loc=read1 --umi_len=8
+  --thread ${THREADS} &> ${OUTDIR_FASTP}/fastp.log
+#  --umi --umi_loc=read1 --umi_len=8  # Required if reads contain UMIs
+```
+Make the script executable with `chmod +x 02-trim_reads_fastp.sh` and run it locally like this:
+```
+./02-trim_reads_fastp.sh ./data/example.R1.fastq.gz ./data/example.R2.fastq.gz
 ```
 
-### B.3 Dealing with UMIs
-
-
-[UMI-tools](https://umi-tools.readthedocs.io/en/latest/index.html) can handle any UMI tagged sequencing data where deduplication happens after mapping.
-
-The process is to extract the UMIs from the read sequence and add it to the read names. There are two ways to do this, and between them provide the flexibility to handle any read configuration I can think of (see https://umi-tools.readthedocs.io/en/latest/regex.html)
-
-You then map your reads with your favourite mapper.
-
-The next step depends on whether your technique fragments the cDNA before or after PCR. If fragmentation happens after PCR, then the next step is to assign reads to features (e.g. genes) using featureCounts. If PCR happened after fragmentation, then you do the read assignment/quantification after deduping.
-
-Then you group/dedup/count (depending on your downstream application). If fragmentation happened after PCR then you need to do this on a per-gene basis.
-
+As before, if you want to use sbatch you can run the script by adding the `sbatch` command at the front:
 ```
-# Extract UMI info from reads
-
-module load umitools
-# For Single-end reads
-# umi_tools extract --stdin=${READ_PREFIX}.paired.R1.fastq.gz --bc-pattern=NNNNNNNNN --log=processed.log --stdout ${READ_PREFIX}.umi.fastq.gz 
-# For Paired-end reads
-# umi_tools extract [OPTIONS] -p PATTERN [-I IN_FASTQ[.gz]] [-S OUT_FASTQ[.gz]] --read2-in=IN2_FASTQ[.gz] --read2-out=OUT2_FASTQ[.gz]
-
-READ_PREFIX=example
-
-umi_tools extract -I ${READ_PREFIX}.paired.R1.fastq.gz --bc-pattern=NNNXXXXNN --bc-pattern2=NNNXXXXNN \ 
-  --read2-in=${READ_PREFIX}.paired.R2.fastq.gz --stdout=${READ_PREFIX}.umi.paired.R1.fastq.gz \
-  --read2-out=${READ_PREFIX}.umi.paired.R2.fastq.gz
+sbatch ./02-trim_reads_fastp.sh ./data/example.R1.fastq.gz ./data/example.R2.fastq.gz
+```
+In the later case, you can follow the status of the sbatch command using the following:
+```
+showq -u $USER
 ```
 
-### B.4 Mapping reads 
+A nice feature about `fastp` is that it will also generate a QC report about the reads before and after trimming, similar to the one generated by `fastqc`.
 
-Note: mention HTSeq2
+You can check the report in html format with your browser, as you did with `fastqc`. The report should be located in your workinf directory and named `fastp.html`.
 
-sjdbGTFfeatureExon                      exon
-    string: feature type in GTF file to be used as exons for building transcripts
+### C.4 Dealing with UMIs
 
-sjdbGTFtagExonParentTranscript          transcript_id
-    string: GTF attribute name for parent transcript ID (default "transcript_id" works for GTF files)
+`fastp` or [`umi_tools`](https://umi-tools.readthedocs.io/en/latest/index.html) can handle any UMI tagged sequencing data where deduplication happens after mapping.
 
-sjdbGTFtagExonParentGene                gene_id
-    string: GTF attribute name for parent gene ID (default "gene_id" works for GTF files)
+For bulk RNAseq, the process is to extract the UMIs from the read sequence and add it to the read names. Then you map your reads with your favourite mapper, remove duplicated reads from the resulting bam file with, for example, `umi_tools dedup`, and finally you count the number of reads per feature using the deduplicated bam file.
 
-sjdbGTFtagExonParentGeneName            gene_name
-    string(s): GTF attribute name for parent gene name
 
-sjdbGTFtagExonParentGeneType            gene_type gene_biotype
-    string(s): GTF attribute name for parent gene type
-
-sjdbOverhang                            100
-    int>0: length of the donor/acceptor sequence on each side of the junctions, ideally = (mate_length - 1)
+### C.5 Mapping reads 
 
 
 
@@ -293,6 +246,7 @@ sbatch ./create_star_index.sh ../data/GRCh38.chr1.fa ../data/gencode.v45.annotat
 sbatch ./create_star_index.sh
 ```
 
+
 **Map reads to the reference genome with STAR**
 ```
 #!/bin/bash
@@ -320,6 +274,24 @@ STAR --runMode alignReads \
   --outSAMtype BAM SortedByCoordinate \
   --outSAMattributes All
 ```
+
+
+Other STAR useful parameters:
+```
+sjdbGTFfeatureExon  exon  string: feature type in GTF file to be used as exons for building transcripts
+
+sjdbGTFtagExonParentTranscript  transcript_id  string: GTF attribute name for parent transcript ID (default "transcript_id" works for GTF files)
+
+sjdbGTFtagExonParentGene  gene_id  string: GTF attribute name for parent gene ID (default "gene_id" works for GTF files)
+
+sjdbGTFtagExonParentGeneName  gene_name  string(s): GTF attribute name for parent gene name
+
+sjdbGTFtagExonParentGeneType  gene_type gene_biotype  string(s): GTF attribute name for parent gene type
+
+sjdbOverhang  100  int>0: length of the donor/acceptor sequence on each side of the junctions, ideally = (mate_length - 1)
+```
+
+**Note:** Another popular mapper for RNAseq analysis is [HISAT2](https://daehwankimlab.github.io/hisat2/).
 
 ### B.5 Deduplicate reads
 ```
