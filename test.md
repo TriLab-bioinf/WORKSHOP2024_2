@@ -85,12 +85,7 @@ chr1	17304527	.	C	A	80	PASS	DP=4;VDB=0.7;SGB=-0.453602;MQ0F=0;AC=2;AN=2;DP4=0,0,
 chr1	24866346	.	G	T	30.4183	PASS	DP=2;SGB=-0.379885;MQ0F=0;AC=2;AN=2;DP4=0,0,0,1;MQ=60	GT:PL	1/1:60,3,0
 ```
  
-## Bam files conversion to bed, wig, bigwig and tdf
-### bed
-```
-bedtools bamtobed [OPTIONS] -i <bam>
-```
-
+## Bam files conversion to wig, bigwig and tdf
 ### wig: computes average alignment or feature density for over a specified window size across the genome
 ```
 module load IGVTools
@@ -108,6 +103,11 @@ module load ucsc
 wigToBigWig in.wig chrom.sizes out.bw
 ```
 
+## gff/gtf files conversion to bed
+```
+module load bedops
+convert2bed --input=fmt [--output=fmt] [options] < input > output
+```
 
 ## IGV visualization
 ```
