@@ -1,5 +1,5 @@
 ## SNP identification
-![pipeline](https://github.com/user-attachments/assets/22a4a404-9fe2-4aee-a45b-f94b3b79aa7e)
+![pipeline](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/pipeline.jpg)
 
 
 
