@@ -37,8 +37,16 @@ bwa mem -t 32 \
         -o ERR194160_bwa_sorted.bam \
         2> mapping.log
 ```
-  	
-### 3) Call SNPs (using bcftools) 
+
+### 3) Mark Duplicates
+```
+java -jar picard.jar MarkDuplicates \
+CREATE_INDEX=true \
+INPUT=<input.bam> \
+VALIDATION_STRINGENCY=STRICT
+```
+
+### 4) Call SNPs (using bcftools) 
 ```
 bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls.vcf.gz
 ```
@@ -49,9 +57,21 @@ bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls
 ● bcftools call 
  Applies the prior and does the actual calling.
 
-### 4) Filter SNPs 
+### 5) Filter SNPs 
 ```
 bcftools filter -i'%QUAL>20' calls.vcf.gz -O z -o my.var-final.vcf.gz
+```
+
+### 6) SNP annotations
+```
+#!/bin/bash
+# -- this file is snpEff.sh --
+
+module load snpEff
+ln -s $SNPEFF_HOME/example/file.vcf .
+java -Xmx${SLURM_MEM_PER_NODE}m -jar $SNPEFF_JAR -v hg19 file.vcf > file.eff.vcf
+cat file.eff.vcf | java -jar $SNPSIFT_JAR filter "( EFF[*].IMPACT = 'HIGH' )" > file.filtered.vcf
+java -jar $SNPSIFT_JAR dbnsfp -v -db /fdb/dbNSFP2/dbNSFP3.2a.txt.gz file.eff.vcf > file.annotated.vcf
 ```
 
 ## VCF file formats
