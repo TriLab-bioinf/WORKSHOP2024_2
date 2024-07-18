@@ -30,6 +30,11 @@ Scan the read with a 4-base wide sliding window, cutting when the average qualit
 
 Drop reads below the 36 bases long (MINLEN:36)
 
+```
+# Single End:
+java -jar trimmomatic-0.35.jar SE -phred33 input.fq.gz output.fq.gz ILLUMINACLIP:TruSeq3-SE:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
+```
+
 ### 2)	Mapping (using BWA)
 2.1.	Index the reference (genome) sequence 
 ```
