@@ -181,6 +181,11 @@ Quality score
 Filter (whether or not the variant passed quality filters)
 
 INFO : Generic information about this variant. SnpEff adds annotation information in this column.
+
+Information about the following columns - The GT in the FORMAT column tells us to expect genotypes in the following columns.
+
+Individual identifier: The previous column told us to expect to see genotypes here. The genotype is in the form 0|1, where 0 indicates the reference allele and 1 indicates the alternative allele, i.e it is heterozygous.
+
  
 ## Bam files conversion to wig, bigwig and tdf
 ### wig: computes average alignment or feature density for over a specified window size across the genome
