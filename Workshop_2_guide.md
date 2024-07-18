@@ -281,12 +281,12 @@ STAR --runMode alignReads \
   --outFileNamePrefix ${OUTDIR}/${PREFIX}. \
   --quantMode GeneCounts \
   --outSAMtype BAM SortedByCoordinate \
-  --outSAMattributes All
+  --outSAMattributes All &> ${OUTDIR}/star.log
 ```
 
-Then run the script `04-mapping_reads_star.sh` in your interactive session ike this:
+Then run the script `04-mapping_reads_star.sh` in a Biowulf node like this:
 ```
-./04-mapping_reads_star.sh ./data/example.R1.fastq.gz ./data/example.R2.fastq.gz
+sbatch ./04-mapping_reads_star.sh ./data/example.R1.fastq.gz ./data/example.R2.fastq.gz
 ```
 
 
@@ -308,10 +308,12 @@ sjdbOverhang  100  int>0: length of the donor/acceptor sequence on each side of 
 **Note:** Another popular mapper for RNAseq analysis is [HISAT2](https://daehwankimlab.github.io/hisat2/).
 
 ### B.5 Deduplicate reads
+
+The next step requires the bam file to be sorted by read coordinates and indexed. In our case, STAR sorted the reads during the mapping step, but it that wasn't the case, then you can sort the bam file by read coordinate using samtools and the following command:
 ```
 # Sort bam file by coordinate
 
-GENOME=/data/$USER/WORKSHOP2024_2/data/GRCh38.chr1.fa
+GENOME=${WORSHOPDIR}/data/GRCh38.chr17.fa
 PREFIX=example
 
 samtools sort --threads 8 -O BAM --reference ${GENOME} -T tmp_file -o ${PREFIX}.sorted.bam /data/$USER/WORKSHOP2024_2/${PREFIX}.bam
@@ -322,6 +324,24 @@ samtools sort --threads 8 -O BAM --reference ${GENOME} -T tmp_file -o ${PREFIX}.
 # If you used UMIs
 umi_tools dedup -I mapped.bam --paired -S deduplicated.bam
 
+```
+
+# Flag duplicated reads with Picard
+```
+resources:
+        cpus_per_task = 4,
+        mem_mb = 128000,
+        partition = "quick",
+        time = "4:00:00",
+        gres = "lscratch:40"
+    shell:
+        """
+        picard -Xmx32g MarkDuplicates \
+         I={input} \
+         O={output} \
+         M={log} \
+         {params}
+        samtools index {output}
 ```
 
 ### B.6 Count reads per feature
