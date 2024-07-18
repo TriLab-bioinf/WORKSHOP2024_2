@@ -212,17 +212,26 @@ For bulk RNAseq, the process is to extract the UMIs from the read sequence and a
 
 ### C.5 Mapping reads 
 
+Next step is to map the trimmed (filtered) reads to the reference genome. In our case we will use the human chromosome 17 as reference. In general, any mapping program require the referece sequence to be indexed before it can start mapping the reads. Genome indexing might take several hours for large genomes as the Human or Mouse genomes. Fortunately, index files are already available for most common model organisms, which can be found in Biowulf under the following path:
 
+```
+/fdb/STAR_indices/2.7.11b/GENCODE/Gencode_human/release_39/ref/Genome
+```
 
-In the folder "scripts" create a script named "create_star_index.sh" with the following commands. STAR is pretty memmory intensive and therefore, we will runit with 64G of RAM and 16 CPUs.
+However, many times there is no available index files for our reference of interest and therefore, we will need to create is from scratch by using as input the fasta file of the referennce genome. In our case, we will create the index files for our reference, the human chr17.
+
+**Step 1:**
+
+Create a script named "03-create_star_index.sh" with the following commands. STAR indexing and mapping is pretty memmory intensive and therefore, we usually run it with 64G of RAM and 16 CPUs for large genomes. In our case, the reference is not that large and therefore, we will use just 8 CPUs and 16Gb of memory.
+
 ```
 #!/bin/bash
-#SBATCH --cpus-per-task=16 --mem=32g
+#SBATCH --cpus-per-task=8 --mem=16g
 
 GENOME=$1
 GTF=$2
-OUTDIR=$3
-READLEN=$4
+OUTDIR=Step3-star_mapping
+READLEN=48
 
 module load STAR
 
