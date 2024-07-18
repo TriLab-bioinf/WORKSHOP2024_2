@@ -281,6 +281,7 @@ STAR --runMode alignReads \
   --outFileNamePrefix ${OUTDIR}/${PREFIX}.sorted. \
   --quantMode GeneCounts \
   --outSAMtype BAM SortedByCoordinate \
+  --outSAMattrRGline ID:RG1 , SM:SampleName , PL:Illumina , LB:Library.fa \
   --outSAMattributes All &> ${OUTDIR}/star.log
 ```
 
