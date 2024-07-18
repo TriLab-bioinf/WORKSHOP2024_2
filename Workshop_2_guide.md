@@ -230,13 +230,13 @@ Create a script named "03-create_star_index.sh" with the following commands. STA
 
 GENOME=$1
 GTF=$2
-OUTDIR=Step3-star_mapping
+OUTDIR=Step3-reference_index
 READLEN=48
 
 module load STAR
 
 # Create genome index
-time STAR --runMode genomeGenerate \
+STAR --runMode genomeGenerate \
     --runThreadN 16 \
     --genomeDir ${OUTDIR} \
     --sjdbGTFfile ${GTF} \
@@ -249,32 +249,25 @@ And then run the script, after making it executable, like this:
 ```
 ./03-create_star_index.sh ./data/GRCh38.chr17.fa ./data/gencode.v45.annotation.chr17.gtf
 ```
+Once done, take a look at the output file `Step3-reference_index`. You will see a bunch of files that corrspond to the reference indexes used for read mapping.
 
+**Step 2:**
 
-
-
-```
-# Make script executable
-chmod a+x ./create_star_index.sh
-
-# Run script with sbatch
-sbatch ./create_star_index.sh ../data/GRCh38.chr1.fa ../data/gencode.v45.annotation.gtf ../reference 50
-sbatch ./create_star_index.sh
-```
-
-
-**Map reads to the reference genome with STAR**
+Now we are ready for mapping the trimmed reads to the reference genome with STAR. Create the script `04-mapping_reads_star.sh` with the following code and make it executable, as before:
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16 --mem=32g
 
+# Load read files from the command line
+READ1=$1
+READ2=$2
+
 # STAR-specific variables
 THREADS=16
-REFERENCE=/data/$USER/WORKSHOP2024_2/reference
-PREFIX=example
-READ_PATH=/data/$USER/WORKSHOP2024_2/trimming_fastp
-READ2=/data/$USER/WORKSHOP2024_2/example.paired.R2.fastq.gz
-OUTDIR=/data/$USER/WORKSHOP2024_2/mapping_star
+REFERENCE=${WORKSHOPDIR}/Step3-reference_index
+OUTDIR=${WORKSHOPDIR}/Step4-mapping_star
+READ_NAME=$(basename $READ1)
+PREFIX=${READ_NAME%.paired.R1.fastq.gz}
 
 module load STAR
 
@@ -283,12 +276,17 @@ STAR --runMode alignReads \
   --genomeDir ${REFERENCE} \
   --outFilterMismatchNmax 5 \
   --alignEndsType EndToEnd \
-  --readFilesIn ${READ_PATH}/${PREFIX}.paired.R1.fastq.gz ${READ_PATH}/${PREFIX}.paired.R2.fastq.gz \
+  --readFilesIn ${READ1} ${READ2} \
   --readFilesCommand zcat \
   --outFileNamePrefix ${OUTDIR}/${PREFIX}. \
   --quantMode GeneCounts \
   --outSAMtype BAM SortedByCoordinate \
   --outSAMattributes All
+```
+
+Then run the script `04-mapping_reads_star.sh` in your interactive session ike this:
+```
+./04-mapping_reads_star.sh ./data/example.R1.fastq.gz ./data/example.R2.fastq.gz
 ```
 
 
