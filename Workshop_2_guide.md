@@ -47,14 +47,6 @@ Fraction of reads explained by "1++, 1--, 2+-, 2-+": 0.0123
 Fraction of reads explained by "1+-, 1-+, 2++, 2--": 0.9371
 ```
 
-
-Forward and reverse
-Stranded: how to check if seq data is stranded or not?
-  
-4. SAM/BAM
-5. GTF/GFF
-6. VCF
-
 ## B- Proprocessing of sequencing reads
 ### B.1 Quality control of sequencing data 
 ```
