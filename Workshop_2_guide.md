@@ -289,21 +289,8 @@ Then run the script `04-mapping_reads_star.sh` in a Biowulf node like this:
 sbatch ./04-mapping_reads_star.sh ./data/example.R1.fastq.gz ./data/example.R2.fastq.gz
 ```
 
+STAR wil output the bam file `example.bam` containing read mapping information. 
 
-Other STAR useful parameters:
-```
-sjdbGTFfeatureExon  exon  string: feature type in GTF file to be used as exons for building transcripts
-
-sjdbGTFtagExonParentTranscript  transcript_id  string: GTF attribute name for parent transcript ID (default "transcript_id" works for GTF files)
-
-sjdbGTFtagExonParentGene  gene_id  string: GTF attribute name for parent gene ID (default "gene_id" works for GTF files)
-
-sjdbGTFtagExonParentGeneName  gene_name  string(s): GTF attribute name for parent gene name
-
-sjdbGTFtagExonParentGeneType  gene_type gene_biotype  string(s): GTF attribute name for parent gene type
-
-sjdbOverhang  100  int>0: length of the donor/acceptor sequence on each side of the junctions, ideally = (mate_length - 1)
-```
 
 **Note:** Another popular mapper for RNAseq analysis is [HISAT2](https://daehwankimlab.github.io/hisat2/).
 
@@ -325,8 +312,31 @@ samtools sort --threads 8 -O BAM --reference ${GENOME} -T tmp_file -o ${PREFIX}.
 umi_tools dedup -I mapped.bam --paired -S deduplicated.bam
 
 ```
+#!/bin/bash
+#SBATCH --cpus-per-task=16 --mem=32g
 
 # Flag duplicated reads with Picard
+module load picard/3.2.0
+
+# Enter bam file from the command line
+BAM=$1
+
+OUTDIR=${WORKSHOPDIR}/Step5-markduplicates
+
+java -Xmx32g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
+  --INPUT ${BAM} \
+  --OUTPUT ${OUTDIR} \
+  --METRICS_FILE <File> \
+  --CREATE_INDEX true \
+  --REMOVE_DUPLICATES false \
+  --CREATE_INDEX true \
+  --TMP_DIR /lscratch/$SLURM_JOBID
+
+
+samtools index {output}
+
+TMP_DIR=/lscratch/$SLURM_JOBID
+
 ```
 resources:
         cpus_per_task = 4,
