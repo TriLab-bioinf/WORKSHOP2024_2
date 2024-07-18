@@ -8,6 +8,7 @@
 1.2 trimmomatic
 ```
 #!/bin/bash
+## This is for Paired End data
 module load trimmomatic || exit 1
 java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads $SLURM_CPUS_PER_TASK \
     ERR194160_1.fastq.gz ERR194160_2.fastq.gz \
@@ -16,6 +17,14 @@ java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads $SLURM_CPUS_PER_TAS
     ILLUMINACLIP:/usr/local/apps/trimmomatic/0.39/adapters/TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 \
     SLIDINGWINDOW:4:15 MINLEN:36
 ```
+
+This will perform the following:
+
+Remove adapters (ILLUMINACLIP:TruSeq3-PE.fa:2:30:10)
+Remove leading low quality or N bases (below quality 3) (LEADING:3)
+Remove trailing low quality or N bases (below quality 3) (TRAILING:3)
+Scan the read with a 4-base wide sliding window, cutting when the average quality per base drops below 15 (SLIDINGWINDOW:4:15)
+Drop reads below the 36 bases long (MINLEN:36)
 
 ### 2)	Mapping (using BWA)
 2.1.	Index the reference (genome) sequence 
