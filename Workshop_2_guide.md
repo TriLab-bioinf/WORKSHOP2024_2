@@ -245,7 +245,14 @@ time STAR --runMode genomeGenerate \
     --sjdbOverhang ${READLEN} \
     --genomeFastaFiles ${GENOME}
 ```
-And then run the script on the Biowulf grid like this:
+And then run the script, after making it executable, like this:
+```
+./03-create_star_index.sh ./data/GRCh38.chr17.fa ./data/gencode.v45.annotation.chr17.gtf
+```
+
+
+
+
 ```
 # Make script executable
 chmod a+x ./create_star_index.sh
