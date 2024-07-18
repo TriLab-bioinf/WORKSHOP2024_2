@@ -1,5 +1,6 @@
 ## SNP identification
-![pipeline](https://github.com/user-attachments/assets/2936ebaa-6ad0-45e6-866e-49e4bd8f25b5)
+![pipeline](https://github.com/user-attachments/assets/22a4a404-9fe2-4aee-a45b-f94b3b79aa7e)
+
 
 
 
