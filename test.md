@@ -1,15 +1,29 @@
 ## SNP identification
- 
-### 1)	Align reads to reference (using BWA)
+
+### 1) Quality Control
+1.1 Fastqc
+1.2 trimmomatic
+```
+#!/bin/bash
+module load trimmomatic || exit 1
+java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads $SLURM_CPUS_PER_TASK \
+    ERR194160_1.fastq.gz ERR194160_2.fastq.gz \
+    output_forward_paired.fq.gz output_forward_unpaired.fq.gz \
+    output_reverse_paired.fq.gz output_reverse_unpaired.fq.gz \
+    ILLUMINACLIP:/usr/local/apps/trimmomatic/0.39/adapters/TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 \
+    SLIDINGWINDOW:4:15 MINLEN:36
+```
+
+### 2)	Align reads to reference (using BWA)
 Bwa-mem2 is the next version of the bwa-mem algorithm in bwa. It produces alignment identical to bwa and is ~1.3-3.1x faster depending on the use-case, dataset and the running machine.
 
-1.1.	Index the reference (genome) sequence 
+2.1.	Index the reference (genome) sequence 
 ```
 bwa-mem2 index [-p prefix] <in.fasta>
 ##on biowulf, we can find pre-index genome: /fdb/bwa-mem2/hg38/genome.fa
 ```
 
-1.2.	Perform the alignment 
+2.2.	Perform the alignment 
 ```
 bwa-mem2 mem -t 32 \
         -R "@RG\tID:$id\tPL:ILLUMINA\tLB:$lb\tSM:$sm" \
@@ -24,7 +38,7 @@ bwa-mem2 mem -t 32 \
         2> mapping.log
 ```
   	
-### 2) Call SNPs (using bcftools) 
+### 3) Call SNPs (using bcftools) 
 ```
 bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls.vcf.gz
 ```
@@ -35,7 +49,7 @@ bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls
 ● bcftools call 
  Applies the prior and does the actual calling.
 
-### 3) Filter SNPs 
+### 4) Filter SNPs 
 ```
 bcftools filter -i'%QUAL>20' calls.vcf.gz -O z -o my.var-final.vcf.gz
 ```
