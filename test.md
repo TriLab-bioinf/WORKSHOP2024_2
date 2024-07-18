@@ -1,5 +1,6 @@
 ## SNP identification
-[pipeline.pdf](https://github.com/user-attachments/files/16288360/pipeline.pdf)
+![pipeline](https://github.com/user-attachments/assets/2936ebaa-6ad0-45e6-866e-49e4bd8f25b5)
+
 
 
 
