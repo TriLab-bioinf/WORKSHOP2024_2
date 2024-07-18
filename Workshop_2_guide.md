@@ -47,6 +47,25 @@ Fraction of reads explained by "1++, 1--, 2+-, 2-+": 0.0123
 Fraction of reads explained by "1+-, 1-+, 2++, 2--": 0.9371
 ```
 
+## B- Preparing the working directory in Biowulf
+
+**Step 1:**
+
+Download the `WORKSHOP2024_2` data from the Workshop's GitHub repository into your Biowulf data directory like so:
+```
+cd /data/$USER/
+
+git clone https://github.com/TriLab-bioinf/WORKSHOP2024_2.git
+```
+You should see now a new directory named `WORKSHOP2024_2`. Go to that directory `cd WORKSHOP2024_2` and check the content of it by typing `tree`.
+**Step 2:**
+
+Create a variable named `WORKSHOPDIR` with the path of your WORKSHOP2024_2 directory. We will use this variable during the processing of sequencing reads:
+```
+WORKSHOPDIR=/data/$USER/WORKSHOP2024_2
+```
+
+
 ## B- Proprocessing of sequencing reads for RNAseq analysis
 
 ### B.1 Workflow:
@@ -65,20 +84,21 @@ There are several tools that you can use for this. In our case we will you a pro
 
 **Step 1:**
 
-Create a script named `01-fastqc.sh` with the following code:
+Create a script named `01-fastqc.sh` with your favorite editor containing the following code:
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
 
-
-READ1=example.R1.fastq.gz
-READ2=example.R2.fastq.gz
+READ1=${WORKSHOPDIR}/data/example.R1.fastq.gz
+READ2=${WORKSHOPDIR}/data/example.R2.fastq.gz
 OUTDIR=FASTQC
 
 module load fastqc
 fastqc -o $OUTDIR $READ1 $READ2
 ```
 **Note:** Remember to make the script execulatble with `chmod +x 01-fastqc.sh`.
+
+Now run the script like this
 
 Going through a fastqc report
 
