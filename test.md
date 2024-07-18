@@ -89,13 +89,13 @@ bcftools filter -i'%QUAL>20' calls.vcf.gz -O z -o my.var-final.vcf.gz
 ```
 Other useful metrics are:
 
-sequencing depth (DP bigger than twice the average depth indicates problematic regions and is often enriched for artefacts)
+● sequencing depth (DP bigger than twice the average depth indicates problematic regions and is often enriched for artefacts)
 
-the minimum number of high-quality non-reference reads
+● the minimum number of high-quality non-reference reads
 
-proximity to indels (bcftools filter -g)
+● proximity to indels (bcftools filter -g)
 
-etc.
+● etc.
 
 To give a concrete example, the following filter seemed to work quite well for one particular dataset (human data, exomes):
 
