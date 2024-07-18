@@ -80,7 +80,7 @@ bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls
  
 ● bcftools call
 
- Applies the prior and does the actual calling.
+ Applies the prior and does the actual calling. The -m switch tells the program to use the default calling method, the -v option asks to output only variant sites, finally the -O option selects the output format.
 
 ### 5) Filter SNPs 
 ```
