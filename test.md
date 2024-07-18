@@ -64,6 +64,9 @@ bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls
 ### 5) Filter SNPs 
 ```
 bcftools filter -i'%QUAL>20' calls.vcf.gz -O z -o my.var-final.vcf.gz
+bcftools filter -sLowQual -g3 -G10 \
+    -e'%QUAL<10 || (RPB<0.1 && %QUAL<15) || (AC<2 && %QUAL<15) || %MAX(DV)<=3 || %MAX(DV)/%MAX(DP)<=0.3' \
+    calls.vcf.gz
 ```
 
 ### 6) SNP annotations
