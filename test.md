@@ -21,9 +21,13 @@ java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads $SLURM_CPUS_PER_TAS
 This will perform the following:
 
 Remove adapters (ILLUMINACLIP:TruSeq3-PE.fa:2:30:10)
+
 Remove leading low quality or N bases (below quality 3) (LEADING:3)
+
 Remove trailing low quality or N bases (below quality 3) (TRAILING:3)
+
 Scan the read with a 4-base wide sliding window, cutting when the average quality per base drops below 15 (SLIDINGWINDOW:4:15)
+
 Drop reads below the 36 bases long (MINLEN:36)
 
 ### 2)	Mapping (using BWA)
