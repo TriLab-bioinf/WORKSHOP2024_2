@@ -106,7 +106,7 @@ bcftools filter -sLowQual -g3 -G10 \
 ```
 
 ### 6) SNP annotations
-AnpEff: Genetic variant annotation, and functional effect prediction toolbox. It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
+SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
 
 ```
 #!/bin/bash
@@ -163,6 +163,17 @@ chr1	17304501	.	C	G	21.4353	PASS	DP=4;SGB=-0.379885;RPB=1;MQB=1;BQB=1;MQ0F=0;ICB
 chr1	17304527	.	C	A	80	PASS	DP=4;VDB=0.7;SGB=-0.453602;MQ0F=0;AC=2;AN=2;DP4=0,0,2,0;MQ=60	GT:PL	1/1:110,6,0
 chr1	24866346	.	G	T	30.4183	PASS	DP=2;SGB=-0.379885;MQ0F=0;AC=2;AN=2;DP4=0,0,0,1;MQ=60	GT:PL	1/1:60,3,0
 ```
+
+In a nutshell, VCF format is tab-separated text file having the following columns:
+
+Chromosome name
+Position
+Variant's ID
+Reference genome
+Alternative (i.e. variant)
+Quality score
+Filter (whether or not the variant passed quality filters)
+INFO : Generic information about this variant. SnpEff adds annotation information in this column.
  
 ## Bam files conversion to wig, bigwig and tdf
 ### wig: computes average alignment or feature density for over a specified window size across the genome
