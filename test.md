@@ -106,6 +106,8 @@ bcftools filter -sLowQual -g3 -G10 \
 ```
 
 ### 6) SNP annotations
+AnpEff: Genetic variant annotation, and functional effect prediction toolbox. It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
+
 ```
 #!/bin/bash
 # -- this file is snpEff.sh --
