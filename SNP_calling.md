@@ -16,9 +16,21 @@ ls -lrt /data/$USER/WORKSHOP2024_2/WGS_data/
 ### 1) Quality Control
 1.1 Fastqc
 ```
+#!/bin/bash
+#SBATCH
+
+# Enter path to read files from STDIN 
+READ1=$1
+READ2=$2
+
+# Set name of output directory
+OUTDIR=01-fastqc
+
+# Create output directory
+mkdir -p $OUTDIR
+
 module load fastqc
-fastqc example_R1.fastq.gz
-fastqc example_R2.fastq.gz
+fastqc -o $OUTDIR $READ1 $READ2
 ```
 
 1.2 trimmomatic
