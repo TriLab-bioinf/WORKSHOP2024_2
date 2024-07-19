@@ -5,7 +5,7 @@
 
 sample=example
 adapter=/usr/local/apps/trimmomatic/0.39/adapters/TruSeq3-PE.fa
-module load trimmomatic || exit 1
+module load trimmomatic
 java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads 12 \
     ${sample}_R1.fastq.gz ${sample}_R2.fastq.gz \
     ${sample}_forward_paired.fq.gz ${sample}_forward_unpaired.fq.gz \
