@@ -71,11 +71,6 @@ java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads 12 \
     SLIDINGWINDOW:4:15 MINLEN:36
 ```
 
-```
-./02-trim_reads_fastp.sh ./data/example.R1.fastq.gz ./data/example.R2.fastq.gz
-```
-
-
 This will perform the following:
 
 Remove adapters (ILLUMINACLIP:TruSeq3-PE.fa:2:30:10)
@@ -88,7 +83,7 @@ Scan the read with a 4-base wide sliding window, cutting when the average qualit
 
 Drop reads below the 36 bases long (MINLEN:36)
 
-Make the script executable with chmod +x 02-trim_reads_fastp.sh and run it locally like this:
+Make the script executable with chmod +x 02-trim_reads_trimmomatic.sh and run it locally like this:
 
 ```
 ./02-trim_reads_trimmomatic.sh ./WGS_data/example_R1.fastq.gz ./WGS_data/example_R2.fastq.gz
