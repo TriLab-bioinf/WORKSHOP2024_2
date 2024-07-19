@@ -89,8 +89,6 @@ Before you start processing your sequencing files it is important to first check
 
 There are several tools that you can use for this. In our case we will you a program called `fastqc`.
 
-**Step 1:**
-
 Create a script named `01-fastqc.sh` with your favorite editor containing the following code:
 ```
 #!/bin/bash
