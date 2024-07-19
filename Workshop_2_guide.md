@@ -310,6 +310,7 @@ samtools sort --threads 8 \
 ```
 
 **Step 3:**
+
 Now we need to flag the reads that are duplicated. PCR duplicated reads are those whose 5'end coordinate are the same (for paired-end reads, both 5'ends have to match), also share the same UMI (if they have one). The second type of duplication are optical duplicates, that share the same coordinate on the flow cell. 
 
 **Case 1: UMIs were added during library preparation**
@@ -369,11 +370,14 @@ java -Xmx32g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicat
   --TMP_DIR /lscratch/$SLURM_JOBID
 
 ```
-Next, run the 05-mark_duplicates.sh script remotely with sbatch:
+Next, run 05-mark_duplicates.sh remotely with sbatch (remember to make it executable first!!):
 ```
 sbatch ./05-mark_duplicates.sh ./Step4-mapping_star/example.sorted.bam 
 ```
-Picard MarkDuplicates requires a lot of memmory and disk space to run. Therefore, you need to make sure that you request enough memory if you are working with a big genome (human, mouse). This tool though will only require 5 CPUs, as configured above. You can monitor how much resources your program is using while runnign with the command `jobload -j job_#`.
+Picard MarkDuplicates requires a lot of memmory and disk space to run. Therefore, you need to make sure that you request enough memory if you are working with a big genome (human, mouse). This tool though will only require 5 CPUs, as configured above. You can monitor how much resources your program is using while runnign with the command `jobload -j job_#`. For a human genome, I usually request the following to the sbatch job:
+```
+sbatch --cpus-per-task=5 --mem=128g --gres=lscratch:40 <my picard MarkDuplicates scrip here>
+```
 
 samtools index {output}
 
