@@ -287,7 +287,7 @@ STAR --runMode alignReads \
 
 Then run the script `04-mapping_reads_star.sh` in a Biowulf node like this:
 ```
-sbatch ./04-mapping_reads_star.sh ./data/example.R1.fastq.gz ./data/example.R2.fastq.gz
+sbatch ./04-mapping_reads_star.sh ./Step2-trimming_fastp/example.paired.R1.fastq.gz ./Step2-trimming_fastp/example.paired.R2.fastq.gz
 ```
 
 STAR wil output the bam file `example.bam` containing read mapping information. 
