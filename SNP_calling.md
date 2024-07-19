@@ -125,22 +125,6 @@ Other useful metrics are:
 
 ● etc.
 
-
-
-### 6) SNP annotations
-SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
-
-```
-#!/bin/bash
-# -- this file is snpEff.sh --
-
-module load snpEff
-#ln -s $SNPEFF_HOME/example/file.vcf .
-java -Xmx${SLURM_MEM_PER_NODE}m -jar $SNPEFF_JAR -v hg38 calls.vcf.gz > example.eff.vcf
-cat example.eff.vcf | java -jar $SNPSIFT_JAR filter "( EFF[*].IMPACT = 'HIGH' )" > example.filtered.vcf
-java -jar $SNPSIFT_JAR dbnsfp -v -db /fdb/dbNSFP2/dbNSFP3.2a.txt.gz file.eff.vcf > example.annotated.vcf
-```
-
 ## VCF file formats
 ```
 ##fileformat=VCFv4.2
@@ -204,6 +188,38 @@ INFO : Generic information about this variant. SnpEff adds annotation informatio
 Information about the following columns - The GT in the FORMAT column tells us to expect genotypes in the following columns.
 
 Individual identifier: The previous column told us to expect to see genotypes here. The genotype is in the form 0|1, where 0 indicates the reference allele and 1 indicates the alternative allele, i.e it is heterozygous.
+
+
+### 6) SNP annotations
+SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
+
+```
+#!/bin/bash
+# -- this file is snpEff.sh --
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=24g
+
+module load snpEff
+#ln -s $SNPEFF_HOME/example/file.vcf .
+java -Xmx${SLURM_MEM_PER_NODE}m -jar $SNPEFF_JAR -v hg38 my.var-final.vcf.gz > example.eff.vcf
+cat example.eff.vcf | java -jar $SNPSIFT_JAR filter "( EFF[*].IMPACT = 'HIGH' )" > example.filtered.vcf
+#java -jar $SNPSIFT_JAR dbnsfp -v -db /fdb/dbNSFP2/dbNSFP3.2a.txt.gz file.eff.vcf > example.annotated.vcf
+```
+
+After SnpEff annotation, the information is added into INFO column
+```
+##SnpEffVersion="5.2a (build 2023-10-24 14:24), by Pablo Cingolani"
+##SnpEffCmd="SnpEff  hg38 my.var-final.vcf.gz "
+##INFO=<ID=ANN,Number=.,Type=String,Description="Functional annotations: 'Allele | Annotation | Annotation_Impact | Gene_Name | Gene_ID | Feature_Type | Feature_ID | Transcript_BioType | Rank | HGVS.c | HGVS.p | cDNA.pos / cDNA.length | CDS.pos / CDS.length | AA.pos / AA.length | Distance | ERRORS / WARNINGS / INFO' ">
+##INFO=<ID=LOF,Number=.,Type=String,Description="Predicted loss of function effects for this variant. Format: 'Gene_Name | Gene_ID | Number_of_transcripts_in_gene | Percent_of_transcripts_affected'">
+##INFO=<ID=NMD,Number=.,Type=String,Description="Predicted nonsense mediated decay effects for this variant. Format: 'Gene_Name | Gene_ID | Number_of_transcripts_in_gene | Percent_of_transcripts_affected'">
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  example
+chr17   62608   .       G       A       21.9555 PASS    DP=3;VDB=0.28;SGB=-0.453602;RPBZ=-1.22474;MQBZ=0;BQBZ=0;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,1,0,2;MQ=60;ANN=A|intergenic_region|MODIFIER|CHR_START-SCGB1C2|CHR_START-SCGB1C2|intergenic_region|CHR_START-SCGB1C2|||n.62608G>A||||||   GT:PL   0/1:55,0,26
+chr17   76752   .       C       A       22.4195 PASS    DP=4;VDB=0.52;SGB=-0.453602;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=-0.408248;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,2,2,0;MQ=60;ANN=A|intergenic_region|MODIFIER|CHR_START-SCGB1C2|CHR_START-SCGB1C2|intergenic_region|CHR_START-SCGB1C2|||n.76752C>A||||||  GT:PL   0/1:55,0,61
+chr17   114276  .       A       G       61.4147 PASS    DP=3;VDB=0.0618664;SGB=-0.511536;MQ0F=0;AC=2;AN=2;DP4=0,0,3,0;MQ=60;ANN=G|intergenic_region|MODIFIER|CHR_START-SCGB1C2|CHR_START-SCGB1C2|intergenic_region|CHR_START-SCGB1C2|||n.114276A>G||||||        GT:PL   1/1:91,9,0
+chr17   114551  .       G       C       40.4148 PASS    DP=2;VDB=0.5;SGB=-0.453602;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60;ANN=C|intergenic_region|MODIFIER|CHR_START-SCGB1C2|CHR_START-SCGB1C2|intergenic_region|CHR_START-SCGB1C2|||n.114551G>C||||||      GT:PL   1/1:70,6,0
+
+```
 
  
 ## Bam files conversion to wig, bigwig and tdf
