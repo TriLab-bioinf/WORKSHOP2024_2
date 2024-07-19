@@ -281,7 +281,8 @@ STAR --runMode alignReads \
   --outFileNamePrefix ${OUTDIR}/${PREFIX}.sorted. \
   --quantMode GeneCounts \
   --outSAMtype BAM SortedByCoordinate \
-  --outSAMattributes All &> ${OUTDIR}/star.log
+  --outSAMattributes All \
+  --twopassMode Basic # Optional, it imprives support for novel splice junctions
 ```
 
 Then run the script `04-mapping_reads_star.sh` in a Biowulf node like this:
