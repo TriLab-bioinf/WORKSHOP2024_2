@@ -291,6 +291,24 @@ sbatch ./04-mapping_reads_star.sh ./Step2-trimming_fastp/example.paired.R1.fastq
 
 This command will produce a bam file, which contains read mapping information. In this case, STAR wil output a bam file name `example.sorted.Aligned.sortedByCoord.out.bam` within the directory `Step4-mapping_star`.
 
+SAM/BAM files can be visualized with the command `samtools view <BAM_FILE>`. These files are composed of two parts:
+1. A header at the top, composed of several lines starting with the `@` symbol, which contain general information such as whether the file is sorted or not, sizes of the reference chromosomes/scaffolds, commands used to generate the SAM/BAM file, and names of the sample, sequencing library, etc. For instance:
+```
+@HD	VN:1.4	SO:coordinate
+@SQ	SN:chr17	LN:83257441
+@PG	ID:STAR	PN:STAR	VN:2.7.11b	CL:STAR   --runMode alignReads      --runThreadN 16   --genomeDir /home/lorenziha/data/WORKSHOP2024_2/Step3-reference_index   --readFilesIn ./data/example.R1.fastq.gz   ./data/example.R2.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix /home/lorenziha/data/WORKSHOP2024_2/Step4-mapping_star/example.R1.fastq.gz.sorted.   --outSAMtype BAM   SortedByCoordinate      --outSAMattributes All      --outSAMattrRGline "ID:RG1	SM:SampleName	PL:Illumina	LB:Library.fa"      --outFilterMismatchNmax 5   --alignEndsType EndToEnd   --quantMode GeneCounts
+@RG	ID:RG1	SM:SampleName	PL:Illumina	LB:Library.fa
+```
+
+2. After the header comes the mapping information about the reads organized in a tab-delimited manner, where each line stores mapping data for one single read. Mapping data looks like this:
+```
+A00941:835:H2WLKDRX2:1:2271:9200:35524	99	chr17	59989	255	50M	=	60092	153	TGTGCCGGCCCTGATCATGCAGCTCTTCCAGGCCCACTGCTTCTTCCTGT	,FFFFFFFFFFFFFFFFFFFFFFFFF:FFFFFFFFFFFFFFFFFFFFFFF	NH:i:1	HI:i:1	AS:i:84	nM:i:1	NM:i:12	MD:Z:0N0N0N0N0N0N0N0N0N0N0N0N38	jM:B:c,-1	jI:B:i,-1	MC:Z:50M	RG:Z:RG1
+A00941:835:H2WLKDRX2:1:2115:12048:34601	99	chr17	59992	255	50M	=	60037	95	ACCGGCCCTGATCATGCAGCTCTTCCAGGCCCACTGCTTCTTCCTGTCCA	,FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,FFF	NH:i:1	HI:i:1	AS:i:87	nM:i:1	NM:i:9	MD:Z:0N0N0N0N0N0N0N0N0N41	jM:B:c,-1	jI:B:i,-1	MC:Z:50M	RG:Z:RG1
+```
+
+An in-depth description of what information is stored in each column can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
+ 
+
 
 **Note:** Another popular mapper for RNAseq analysis is [HISAT2](https://daehwankimlab.github.io/hisat2/).
 
