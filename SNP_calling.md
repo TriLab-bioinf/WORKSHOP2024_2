@@ -219,6 +219,7 @@ chr17   148758  .       C       T       160.416 PASS    DP=7;VDB=0.933109;SGB=-0
 chr17   150509  .       T       TA      43.4147 PASS    INDEL;IDV=2;IMF=1;DP=2;VDB=0.28;SGB=-0.453602;MQSBZ=0;BQBZ=1;MQ0F=0;AC=2;AN=2;DP4=0,0,2,0;MQ=60;ANN=TA|intron_variant|MODIFIER|DOC2B|DOC2B|transcript|NM_003585.5|protein_coding|6/8|c.924-1318_924-1317insT||||||      GT:PL   1/1:73,6,0
 chr17   156324  .       G       C       42.4147 PASS    DP=2;VDB=0.06;SGB=-0.453602;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,1,1;MQ=60;ANN=C|synonymous_variant|LOW|DOC2B|DOC2B|transcript|NM_003585.5|protein_coding|6/9|c.819C>G|p.Ser273Ser|990/6062|819/1239|273/412||      GT:PL   1/1:72,6,0
 chr17   156366  .       A       G       81.415  PASS    DP=3;VDB=0.301053;SGB=-0.511536;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,2,1;MQ=60;ANN=G|synonymous_variant|LOW|DOC2B|DOC2B|transcript|NM_003585.5|protein_coding|6/9|c.777T>C|p.Thr259Thr|948/6062|777/1239|259/412||  GT:PL   1/1:111,9,0
+chr17   17042759        .       CG      CGG     26.4242 PASS    INDEL;IDV=2;IMF=1;DP=2;VDB=0.42;SGB=-0.453602;BQBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60;ANN=CGG|frameshift_variant|HIGH|MPRIP|MPRIP|transcript|NM_001364716.2|protein_coding|1/24|c.8dupG|p.Gly4fs|305/15419|9/7374|3/2457||,CGG|5_prime_UTR_variant|MODIFIER|MPRIP|MPRIP|transcript|NM_015134.4|protein_coding|1/23|c.-89dupG|||||88|,CGG|5_prime_UTR_variant|MODIFIER|MPRIP|MPRIP|transcript|NM_201274.4|protein_coding|1/24|c.-89dupG|||||88|        GT:PL   1/1:56,6,0
 ```
 
  
