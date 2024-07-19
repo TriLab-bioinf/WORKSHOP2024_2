@@ -380,7 +380,7 @@ sbatch --cpus-per-task=5 --mem=128g --gres=lscratch:40 <my picard MarkDuplicates
 ```
 
 
-### C.7 Count reads per feature
+### C.7 Count reads per genomic feature
 
 The last step os to generate a tabulated reads containing reads counts per feature from the `dedup.bam` file. . For bulk RNAseq, features are usually either genes or transcripts. For this task we will use a tool from the `subread` module called `featureCounts`. Let's create the script `06-feature_counts.sh` with the following code:
 
