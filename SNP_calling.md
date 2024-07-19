@@ -2,6 +2,12 @@
 ![pipeline](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/pipeline.jpg)
 
 
+### get example data
+
+```
+cp -r /scratch/wangy80/WGS_data ./
+```
+
 ### 1) Quality Control
 1.1 Fastqc
 ```
