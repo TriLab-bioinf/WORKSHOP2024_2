@@ -380,7 +380,7 @@ sbatch --cpus-per-task=5 --mem=128g --gres=lscratch:40 <my picard MarkDuplicates
 ```
 
 
-### C.t Count reads per feature
+### C.7 Count reads per feature
 
 The last step os to generate a tabulated reads containing reads counts per feature from the `dedup.bam` file. . For bulk RNAseq, features are usually either genes or transcripts. For this task we will use a tool from the `subread` module called `featureCounts`. Let's create the script `06-feature_counts.sh` with the following code:
 
@@ -401,13 +401,11 @@ module load subread
 
 featureCounts -G ${GENOME} -T ${THREADS}\
   -a ${GTF} \
-  -t CDS \
+  -t exon \
   -g gene_id \
   -O \
   -s 2 \
-  -J \
-  -R BAM \
-  -p \
+  -p --countReadPairs -C \
   --ignoreDup \
   -M --fraction \
   -o ${OUTPUT_FILE} ${BAM}
@@ -417,5 +415,7 @@ Now run the script using the following command:
 ```
 sbatch ./06-feature_counts.sh ./Step5-markduplicates/example.dedup.bam
 ```
+Within the `Step6-read_counts` output directory, you will find a file named `read_counts.txt`  containing the read counts per feature, that can be imported into R for differential gene expression analysis. Also, you will find a second file named `read_counts.txt.summary` that contains a summary of the reads that were mapped or not to thhe genome features of interest.
+
 
 
