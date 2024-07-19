@@ -277,14 +277,12 @@ chrX    156040895
 chrY    57227415
 chrM    16569
 ```
-We can use samtools index reference genome and get fai file, then cut the first two columns into chrom.sizes.
+We can use samtools faidx reference genome and get fai file, then cut the first two columns into chrom.sizes.
 
 ```
 module load ucsc 
 wigToBigWig example_bwa_sorted_dedup.wig chrom.sizes example_bwa_sorted_dedup.bw
 ```
-
-
 
 
 
