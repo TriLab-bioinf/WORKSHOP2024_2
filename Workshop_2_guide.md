@@ -294,7 +294,7 @@ STAR wil output the bam file `example.bam` containing read mapping information.
 
 **Note:** Another popular mapper for RNAseq analysis is [HISAT2](https://daehwankimlab.github.io/hisat2/).
 
-### B.5 Deduplicate reads
+### C.6 Remove or flag deduplicate reads
 
 The next step requires the bam file to be sorted by read coordinates. In our case, STAR sorted the reads during the mapping step, but if that wasn't the case, then you can sort the bam file by read coordinate using samtools and the following command:
 ```
@@ -346,7 +346,7 @@ This will create a new bam file named `example.sorted.bam` in the same directory
 ```
 
 Now we are ready for flagging duplicated reads with picard. To do so, prepare a script named `06-mark_duplicates.sh` with the following lines:
-```
+```diff
 #!/bin/bash
 #SBATCH --cpus-per-task=5 --mem=32g --gres=lscratch:40
 
@@ -379,29 +379,40 @@ Picard MarkDuplicates requires a lot of memmory and disk space to run. Therefore
 sbatch --cpus-per-task=5 --mem=128g --gres=lscratch:40 <my picard MarkDuplicates scrip here>
 ```
 
-samtools index {output}
 
-TMP_DIR=/lscratch/$SLURM_JOBID
+### C.t Count reads per feature
+
+The last step os to generate a tabulated reads containing reads counts per feature from the `dedup.bam` file. . For bulk RNAseq, features are usually either genes or transcripts. For this task we will use a tool from the `subread` module called `featureCounts`. Let's create the script `06-feature_counts.sh` with the following code:
+
+```diff
+#!/bin/bash
+#SBATCH --cpus-per-task=8
+
+BAM=$1
+GENOME=${WORKSHOPDIR}/data/GRCh38.chr17.fa
+THREADS=8
+GTF=${WORKSHOPDIR}/data/gencode.v45.annotation.chr17.gtf
+OUTPUT_FILE=${WORKSHOPDIR}/Step6-read_counts/read_counts.txt
+
+module load subread
+
+featureCounts -G ${GENOME} -T ${THREADS}\
+  -a ${GTF} \
+  -t CDS \
+  -g gene_id \
+  -O \
+  -s 2 \
+  -J \
+  -R BAM \
+  -p \
+  --ignoreDup \
+  -M --fraction \
+  -o ${OUTPUT_FILE} ${BAM}
 
 ```
-resources:
-        cpus_per_task = 4,
-        mem_mb = 128000,
-        partition = "quick",
-        time = "4:00:00",
-        gres = "lscratch:40"
-    shell:
-        """
-        picard -Xmx32g MarkDuplicates \
-         I={input} \
-         O={output} \
-         M={log} \
-         {params}
-        samtools index {output}
+Now run the script using the following command:
+```
+sbatch ./06-feature_counts.sh ./Step5-markduplicates/example.dedup.bam
 ```
 
-### B.6 Count reads per feature
-Count reads as fragments for PE reads
-```
-featureCounts
-```
+
