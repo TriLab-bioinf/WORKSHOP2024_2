@@ -21,6 +21,9 @@ fastqc example_R2.fastq.gz
 1.2 trimmomatic
 ```
 #!/bin/bash
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=32g
+
 ## This is for Paired End data
 sample=example
 adapter=/usr/local/apps/trimmomatic/0.39/adapters/TruSeq3-PE.fa
@@ -86,6 +89,9 @@ bwa mem -t 32 \
 ### 3) Mark Duplicates
 ```
 #!/bin/bash
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=32g
+
 module load picard
 sample=example
 time java -Xmx8g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
@@ -195,8 +201,8 @@ SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It
 ```
 #!/bin/bash
 # -- this file is snpEff.sh --
-#SBATCH --cpus-per-task=12
-#SBATCH --mem=24g
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=32g
 
 module load snpEff
 #ln -s $SNPEFF_HOME/example/file.vcf .
