@@ -445,5 +445,7 @@ To build a graphical report we will use the utility `multiqc`. Run the following
 module load multiqc
 multiqc ${WORKSHOPDIR}
 ```
-This command will generate a html file named `multiqc_report.html` that can be inspected with a browser.
+This command will generate a html file named `multiqc_report.html` that can be inspected with a browser. Analysis of this report can help to identify potential issues in the sequencing data that are not that obvious from the raw (text) log outputs for the programs above. For instance, here is an example of how the log file output by STAR helped to identify a RNAseq dataset contaminated with rRNA reads, due to problems in the rRNA-depletion step during sequencing library preparation:
+
+![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/rRNA_contamination_example.png)
 
