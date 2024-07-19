@@ -64,7 +64,7 @@ bwa index hg38_chr17.fa
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=40g
+#SBATCH --mem=32g
 
 module load bwa
 module load samtools
@@ -78,7 +78,7 @@ bwa mem -t 32 \
         ${sm}_forward_paired.fq.gz \
         ${sm}_reverse_paired.fq.gz \
         | samtools sort \
-        -@ 12 \
+        -@ 16 \
         -O BAM \
         -o ${sm}_bwa_sorted.bam
 ```
