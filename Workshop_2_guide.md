@@ -435,5 +435,12 @@ sbatch ./07-feature_counts.sh ./Step5-markduplicates/example.dedup.bam
 ```
 Within the `Step7-read_counts` output directory, you will find a file named `read_counts.txt`  containing the read counts per feature, that can be imported into R for differential gene expression analysis. Also, you will find a second file named `read_counts.txt.summary` that contains a summary of the reads that were mapped or not to thhe genome features of interest.
 
+### C.8 Generate a report summarizing the results from all steps above
 
+To build a graphical report we will use the utility `multiqc`. Run the following commands on the `WORKSHOP2024_2` directory:
+```
+module load multiqc
+multiqc ${WORKSHOPDIR}
+```
+This command will generate a html file named `multiqc_report.html` that can be inspected with a browser.
 
