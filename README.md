@@ -1,4 +1,4 @@
-### WORKSHOP2024_2
+### Bioinformatics Workshop #2: Preprocessing and mapping reads to a reference genome for RNAseq and SNP analyses.
 
 #### Workshop goal:
 
