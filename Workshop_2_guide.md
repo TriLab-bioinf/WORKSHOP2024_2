@@ -374,10 +374,10 @@ module load picard/3.2.0
 # Enter bam file from the command line
 BAM=$1
 PREFIX=example
-OUTDIR=${WORKSHOPDIR}/Step5-markduplicates
+OUTDIR=${WORKSHOPDIR}/Step6-markduplicates
 
 # Make output directory
-mkdir -p ${WORKSHOPDIR}/Step5-markduplicates
+mkdir -p ${WORKSHOPDIR}/Step6-markduplicates
 
 java -Xmx32g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
   --INPUT ${BAM} \
@@ -388,9 +388,9 @@ java -Xmx32g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicat
   --TMP_DIR /lscratch/$SLURM_JOBID
 
 ```
-Next, run 05-mark_duplicates.sh remotely with sbatch (remember to make it executable first!!):
+Next, run 06-mark_duplicates.sh remotely with sbatch (remember to make it executable first!!):
 ```
-sbatch ./05-mark_duplicates.sh ./Step4-mapping_star/example.sorted.bam 
+sbatch ./06-mark_duplicates.sh ./Step4-mapping_star/example.sorted.bam 
 ```
 Picard MarkDuplicates requires a lot of memmory and disk space to run. Therefore, you need to make sure that you request enough memory if you are working with a big genome (human, mouse). This tool though will only require 5 CPUs, as configured above. You can monitor how much resources your program is using while runnign with the command `jobload -j job_#`. For a human genome, I usually request the following to the sbatch job:
 ```
@@ -400,7 +400,7 @@ sbatch --cpus-per-task=5 --mem=128g --gres=lscratch:40 <my picard MarkDuplicates
 
 ### C.7 Count reads per genomic feature
 
-The last step os to generate a tabulated reads containing reads counts per feature from the `dedup.bam` file. . For bulk RNAseq, features are usually either genes or transcripts. For this task we will use a tool from the `subread` module called `featureCounts`. Let's create the script `06-feature_counts.sh` with the following code:
+The last step os to generate a tabulated reads containing reads counts per feature from the `dedup.bam` file. . For bulk RNAseq, features are usually either genes or transcripts. For this task we will use a tool from the `subread` module called `featureCounts`. Let's create the script `07-feature_counts.sh` with the following code:
 
 ```diff
 #!/bin/bash
@@ -410,10 +410,10 @@ BAM=$1
 GENOME=${WORKSHOPDIR}/data/GRCh38.chr17.fa
 THREADS=8
 GTF=${WORKSHOPDIR}/data/gencode.v45.annotation.chr17.gtf
-OUTPUT_FILE=${WORKSHOPDIR}/Step6-read_counts/read_counts.txt
+OUTPUT_FILE=${WORKSHOPDIR}/Step7-read_counts/read_counts.txt
 
 # Make output direcory
-mkdir -p ${WORKSHOPDIR}/Step6-read_counts
+mkdir -p ${WORKSHOPDIR}/Step7-read_counts
 
 module load subread
 
@@ -431,9 +431,9 @@ featureCounts -G ${GENOME} -T ${THREADS}\
 ```
 Now run the script using the following command:
 ```
-sbatch ./06-feature_counts.sh ./Step5-markduplicates/example.dedup.bam
+sbatch ./07-feature_counts.sh ./Step5-markduplicates/example.dedup.bam
 ```
-Within the `Step6-read_counts` output directory, you will find a file named `read_counts.txt`  containing the read counts per feature, that can be imported into R for differential gene expression analysis. Also, you will find a second file named `read_counts.txt.summary` that contains a summary of the reads that were mapped or not to thhe genome features of interest.
+Within the `Step7-read_counts` output directory, you will find a file named `read_counts.txt`  containing the read counts per feature, that can be imported into R for differential gene expression analysis. Also, you will find a second file named `read_counts.txt.summary` that contains a summary of the reads that were mapped or not to thhe genome features of interest.
 
 
 
