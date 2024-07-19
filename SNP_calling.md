@@ -130,19 +130,18 @@ And then run the script, after making it executable, like this:
 READ1=$1
 READ2=$2
 
-# STAR-specific variables
+# variables setting
 THREADS=16
 REFERENCE=${WORKSHOPDIR}/03-reference_index
 OUTDIR=${WORKSHOPDIR}/04-mapping_bwa
 READ_NAME=$(basename $READ1)
 PREFIX=${READ_NAME%_forward_paired.fastq.gz}
-
-module load bwa
-module load samtools
-
 genome=hg38_chr17.fa
 id=$PREFIX
 sm=$PREFIX
+
+module load bwa
+module load samtools
 
 bwa mem -t ${THREADS} \
         -R "@RG\tID:$id\tPL:ILLUMINA\tSM:$sm" \
@@ -154,7 +153,7 @@ bwa mem -t ${THREADS} \
         -O BAM \
         -o $PREFIX_bwa_sorted.bam
 ```
-Then run the script 04-mapping_reads_star.sh in a Biowulf node like this:
+Then run the script 04-mapping_reads_bwa.sh in a Biowulf node like this:
 ```
 sbatch ./04-mapping_reads_bwa.sh ./02-trimming_trimmomatic/example_forward_paired.fastq.gz ./02-trimming_trimmomatic/example_reverse_paired.fastq.gz
 ```
@@ -183,9 +182,9 @@ java -Xmx32g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicat
   --REMOVE_DUPLICATES false \
   --TMP_DIR /lscratch/$SLURM_JOBID
 ```
-Next, run 06-mark_duplicates.sh remotely with sbatch:
+Next, run 05-mark_duplicates.sh remotely with sbatch:
 ```
-sbatch ./06-mark_duplicates.sh ./04-mapping_bwa/example_bwa_sorted.bam
+sbatch ./05-mark_duplicates.sh ./04-mapping_bwa/example_bwa_sorted.bam
 ```
 
 ### 4) Call SNPs (using bcftools) 
