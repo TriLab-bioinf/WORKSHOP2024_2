@@ -227,6 +227,7 @@ chr17   17042759        .       CG      CGG     26.4242 PASS    INDEL;IDV=2;IMF=
 ### wig: computes average alignment or feature density for over a specified window size across the genome
 ```
 module load IGVTools
+igvtools --memory 20g
 igvtools count example_bwa_sorted_dedup.bam example_bwa_sorted_dedup.wig hg38_chr17.fa
 ```
 
