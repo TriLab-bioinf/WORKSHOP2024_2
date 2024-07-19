@@ -63,6 +63,9 @@ bwa index hg38_chr17.fa
 2.2.	Perform the alignment 
 ```
 #!/bin/bash
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=40g
+
 module load bwa
 module load samtools
 
