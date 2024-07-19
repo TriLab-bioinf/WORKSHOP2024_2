@@ -161,10 +161,9 @@ chr17   62608   .       G       A       21.9555 PASS    DP=3;VDB=0.28;SGB=-0.453
 chr17   76752   .       C       A       22.4195 PASS    DP=4;VDB=0.52;SGB=-0.453602;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=-0.408248;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,2,2,0;MQ=60      GT:PL   0/1:55,0,61
 chr17   114276  .       A       G       61.4147 PASS    DP=3;VDB=0.0618664;SGB=-0.511536;MQ0F=0;AC=2;AN=2;DP4=0,0,3,0;MQ=60     GT:PL   1/1:91,9,0
 chr17   114551  .       G       C       40.4148 PASS    DP=2;VDB=0.5;SGB=-0.453602;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60   GT:PL   1/1:70,6,0
-chr17   114876  .       G       C       44.4146 PASS    DP=2;VDB=0.32;SGB=-0.453602;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,1,1;MQ=60  GT:PL   1/1:74,6,0
-chr17   115017  .       G       C       38.415  PASS    DP=2;VDB=0.84;SGB=-0.453602;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,1,1;MQ=60  GT:PL   1/1:68,6,0
-chr17   116270  .       G       C       124.416 PASS    DP=5;VDB=0.819532;SGB=-0.590765;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,2,3;MQ=60      GT:PL   1/1:154,15,0
-
+chr17   298712  .       aa      aACa    189.416 PASS    INDEL;IDV=4;IMF=0.8;DP=5;VDB=0.709369;SGB=-0.590765;RPBZ=1.41421;MQBZ=0;MQSBZ=0;SCBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,2,3;MQ=60       GT:PL   1/1:219,15,0
+chr17   355539  .       gt      gTt     37.7211 PASS    INDEL;IDV=2;IMF=0.666667;DP=3;VDB=0.28;SGB=-0.453602;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=-1.22474;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,1,1,1;MQ=60      GT:PL   0/1:71,0,26
+chr17   671239  .       agaaag  aGAAAGgaaag     116.327 PASS    INDEL;IDV=3;IMF=0.75;DP=4;VDB=0.470313;SGB=-0.511536;RPBZ=-1.34164;MQBZ=0;MQSBZ=0;SCBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,1,0,3;MQ=60     GT:PL   1/1:143,4,0
 ```
 
 In a nutshell, VCF format is tab-separated text file having the following columns:
@@ -216,9 +215,10 @@ After SnpEff annotation, the information is added into INFO column
 #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  example
 chr17   62608   .       G       A       21.9555 PASS    DP=3;VDB=0.28;SGB=-0.453602;RPBZ=-1.22474;MQBZ=0;BQBZ=0;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,1,0,2;MQ=60;ANN=A|intergenic_region|MODIFIER|CHR_START-SCGB1C2|CHR_START-SCGB1C2|intergenic_region|CHR_START-SCGB1C2|||n.62608G>A||||||   GT:PL   0/1:55,0,26
 chr17   76752   .       C       A       22.4195 PASS    DP=4;VDB=0.52;SGB=-0.453602;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=-0.408248;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,2,2,0;MQ=60;ANN=A|intergenic_region|MODIFIER|CHR_START-SCGB1C2|CHR_START-SCGB1C2|intergenic_region|CHR_START-SCGB1C2|||n.76752C>A||||||  GT:PL   0/1:55,0,61
-chr17   114276  .       A       G       61.4147 PASS    DP=3;VDB=0.0618664;SGB=-0.511536;MQ0F=0;AC=2;AN=2;DP4=0,0,3,0;MQ=60;ANN=G|intergenic_region|MODIFIER|CHR_START-SCGB1C2|CHR_START-SCGB1C2|intergenic_region|CHR_START-SCGB1C2|||n.114276A>G||||||        GT:PL   1/1:91,9,0
-chr17   114551  .       G       C       40.4148 PASS    DP=2;VDB=0.5;SGB=-0.453602;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60;ANN=C|intergenic_region|MODIFIER|CHR_START-SCGB1C2|CHR_START-SCGB1C2|intergenic_region|CHR_START-SCGB1C2|||n.114551G>C||||||      GT:PL   1/1:70,6,0
-
+chr17   148758  .       C       T       160.416 PASS    DP=7;VDB=0.933109;SGB=-0.636426;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,2,5;MQ=60;ANN=T|intron_variant|MODIFIER|DOC2B|DOC2B|transcript|NM_003585.5|protein_coding|7/8|c.1005+353G>A||||||      GT:PL   1/1:190,21,0
+chr17   150509  .       T       TA      43.4147 PASS    INDEL;IDV=2;IMF=1;DP=2;VDB=0.28;SGB=-0.453602;MQSBZ=0;BQBZ=1;MQ0F=0;AC=2;AN=2;DP4=0,0,2,0;MQ=60;ANN=TA|intron_variant|MODIFIER|DOC2B|DOC2B|transcript|NM_003585.5|protein_coding|6/8|c.924-1318_924-1317insT||||||      GT:PL   1/1:73,6,0
+chr17   156324  .       G       C       42.4147 PASS    DP=2;VDB=0.06;SGB=-0.453602;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,1,1;MQ=60;ANN=C|synonymous_variant|LOW|DOC2B|DOC2B|transcript|NM_003585.5|protein_coding|6/9|c.819C>G|p.Ser273Ser|990/6062|819/1239|273/412||      GT:PL   1/1:72,6,0
+chr17   156366  .       A       G       81.415  PASS    DP=3;VDB=0.301053;SGB=-0.511536;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,2,1;MQ=60;ANN=G|synonymous_variant|LOW|DOC2B|DOC2B|transcript|NM_003585.5|protein_coding|6/9|c.777T>C|p.Thr259Thr|948/6062|777/1239|259/412||  GT:PL   1/1:111,9,0
 ```
 
  
