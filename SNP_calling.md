@@ -7,6 +7,7 @@
 ```
 ssh $USER@helix.nih.gov
 cp -r /scratch/wangy80/WGS_data ./
+cd WGS_data
 ```
 
 ### 1) Quality Control
