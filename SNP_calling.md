@@ -231,6 +231,18 @@ igvtools --memory 20g
 igvtools count example_bwa_sorted_dedup.bam example_bwa_sorted_dedup.wig hg38_chr17.fa
 ```
 
+wig example
+```
+track type=wiggle_0
+variableStep chrom=chr17 span=25
+60051   1.0
+60076   1.76
+60101   2.0
+60126   2.0
+60151   1.12
+60176   1.28
+```
+
 ### convert an wig file to tiled data format (tdf)
 ```
 igvtools toTDF example_bwa_sorted_dedup.wig example_bwa_sorted_dedup.tdf hg38_chr17.fa
