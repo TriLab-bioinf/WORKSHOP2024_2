@@ -65,6 +65,18 @@ git clone https://github.com/TriLab-bioinf/WORKSHOP2024_2.git
 ```
 You should see now a new directory named `WORKSHOP2024_2`. Go to that directory `cd WORKSHOP2024_2` and check the content of it by typing `tree`.
 
+Now we need to copy the data files into the Login into `WORKSHOP2024_2` directory. Data files are stored in the folder `/scratch/lorenziha/data`, that is not accessible from the interactive session. Therefore, open another terminal, and this time login into the `Helix` like so:
+```
+ssh $USER@helix.nih.gov 
+```
+Then, run the following command:
+```
+cp -r /scratch/lorenziha/data /data/$USER/WORKSHOP2024_2/
+
+# Check that the "data" directory has been copied just fine
+ls -lrt /data/$USER/WORKSHOP2024_2/data/
+```
+
 **Step 3:**
 
 Create an environmental variable named `WORKSHOPDIR` with the path of your WORKSHOP2024_2 directory. We will use this variable during the processing of sequencing reads:
