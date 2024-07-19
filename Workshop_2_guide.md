@@ -1,4 +1,4 @@
-## Workshop guide
+## Workshop guide for RNAseq read-processing workflow
 
 ## A- File formats
 
