@@ -113,7 +113,7 @@ bcftools mpileup -f hg38_chr17.fa example_bwa_sorted_dedup.bam | bcftools call -
 ### 5) Filter SNPs 
 Variant filtering is not easy. The variant callers provide a quality score (the QUAL) column, which gives an estimate of how likely it is to observe a call purely by chance. An easy way to filter low quality calls is
 ```
-bcftools filter -i'%QUAL>20' calls.vcf.gz -O z -o my.var-final.vcf.gz
+bcftools filter -e 'QUAL<20' calls.vcf.gz -O z -o my.var-final.vcf.gz
 ```
 Other useful metrics are:
 
@@ -152,7 +152,7 @@ java -jar $SNPSIFT_JAR dbnsfp -v -db /fdb/dbNSFP2/dbNSFP3.2a.txt.gz file.eff.vcf
 ##fileformat=VCFv4.2
 ##FILTER=<ID=PASS,Description="All filters passed">
 ##bcftoolsVersion=1.19+htslib-1.19
-##bcftoolsCommand=mpileup -f hg38_chr17.fa chr17_bwa_sorted_MD.bam
+##bcftoolsCommand=mpileup -f hg38_chr17.fa example_bwa_sorted_dedup.bam
 ##reference=file://hg38_chr17.fa
 ##contig=<ID=chr17,length=83257441>
 ##ALT=<ID=*,Description="Represents allele(s) other than observed.">
@@ -175,11 +175,18 @@ java -jar $SNPSIFT_JAR dbnsfp -v -db /fdb/dbNSFP2/dbNSFP3.2a.txt.gz file.eff.vcf
 ##INFO=<ID=DP4,Number=4,Type=Integer,Description="Number of high-quality ref-forward , ref-reverse, alt-forward and alt-reverse bases">
 ##INFO=<ID=MQ,Number=1,Type=Integer,Description="Average mapping quality">
 ##bcftools_callVersion=1.19+htslib-1.19
-##bcftools_callCommand=call -mv -Oz -o calls.vcf.gz; Date=Thu Jul 18 22:29:16 2024
-#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  bar
-chr17   62608   .       G       A       21.9555 .       DP=3;VDB=0.28;SGB=-0.453602;RPBZ=-1.22474;MQBZ=0;BQBZ=0;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,1,0,2;MQ=60       GT:PL   0/1:55,0,26
-chr17   72304   .       C       T       11.7172 .       DP=1;SGB=-0.379885;MQ0F=0;AC=2;AN=2;DP4=0,0,1,0;MQ=49   GT:PL   1/1:41,3,0
-chr17   76752   .       C       A       22.4195 .       DP=4;VDB=0.52;SGB=-0.453602;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=-0.408248;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,2,2,0;MQ=60      GT:PL   0/1:55,0,61
+##bcftools_callCommand=call -mv -Oz -o calls.vcf.gz; Date=Fri Jul 19 09:50:42 2024
+##bcftools_filterVersion=1.19+htslib-1.19
+##bcftools_filterCommand=filter -e QUAL<20 -O z -o my.var-final.vcf.gz calls.vcf.gz; Date=Fri Jul 19 09:54:01 2024
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  example
+chr17   62608   .       G       A       21.9555 PASS    DP=3;VDB=0.28;SGB=-0.453602;RPBZ=-1.22474;MQBZ=0;BQBZ=0;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,1,0,2;MQ=60       GT:PL   0/1:55,0,26
+chr17   76752   .       C       A       22.4195 PASS    DP=4;VDB=0.52;SGB=-0.453602;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=-0.408248;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=0,2,2,0;MQ=60      GT:PL   0/1:55,0,61
+chr17   114276  .       A       G       61.4147 PASS    DP=3;VDB=0.0618664;SGB=-0.511536;MQ0F=0;AC=2;AN=2;DP4=0,0,3,0;MQ=60     GT:PL   1/1:91,9,0
+chr17   114551  .       G       C       40.4148 PASS    DP=2;VDB=0.5;SGB=-0.453602;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60   GT:PL   1/1:70,6,0
+chr17   114876  .       G       C       44.4146 PASS    DP=2;VDB=0.32;SGB=-0.453602;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,1,1;MQ=60  GT:PL   1/1:74,6,0
+chr17   115017  .       G       C       38.415  PASS    DP=2;VDB=0.84;SGB=-0.453602;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,1,1;MQ=60  GT:PL   1/1:68,6,0
+chr17   116270  .       G       C       124.416 PASS    DP=5;VDB=0.819532;SGB=-0.590765;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,2,3;MQ=60      GT:PL   1/1:154,15,0
+
 ```
 
 In a nutshell, VCF format is tab-separated text file having the following columns:
