@@ -281,7 +281,6 @@ STAR --runMode alignReads \
   --outFileNamePrefix ${OUTDIR}/${PREFIX}.sorted. \
   --quantMode GeneCounts \
   --outSAMtype BAM SortedByCoordinate \
-  --outSAMattrRGline ID:RG1 , SM:SampleName , PL:Illumina , LB:Library.fa \
   --outSAMattributes All &> ${OUTDIR}/star.log
 ```
 
@@ -311,18 +310,41 @@ samtools sort --threads 8 \
 ```
 
 **Step 3:**
+Now we need to flag the reads that are duplicated. PCR duplicated reads are those whose 5'end coordinate are the same (for paired-end reads, both 5'ends have to match), also share the same UMI (if they have one). The second type of duplication are optical duplicates, that share the same coordinate on the flow cell. 
 
-Once the bam file is sorted, it is necessary to create an index of it. FOr this we will use the followig `samtools` command:
+**Case 1: UMIs were added during library preparation**
+
+If your reads have UMIs, then you can deduplicate the bam file from STAR with `umi_tools dedup` like so:
 ```
-module load samtools
-
-samtools index $(WORKSHOPDIR}/Step4-mapping_star/example.sorted.bam
-```
-
 
 # If you used UMIs
-umi_tools dedup -I mapped.bam --paired -S deduplicated.bam
+module load umitools
+umi_tools dedup -I $(WORKSHOPDIR}/Step4-mapping_star/${PREFIX}.Aligned.sortedByCoord.out.bam \
+  --paired -S example.dedup.bam
+```
 
+**Case 2: No UMIs were added during library preparation**
+
+In this case, one option is to mark (an optionally remove) duplicated reads with `picard MarkDuplicates`. One of the issues of this tool, is that requires the bam file to contain a SM field in the @RG (Read Group) tag of the bam header, which is not done by STAR. Therefore, we will need to add it with `samtools addreplacerg`. To do this, let's create the script `05-add_read_group.sh` with the following code:
+```
+#!/bin/bash
+#SBATCH
+
+# Get bam file from the command line
+INPUT_BAM=$1
+DIRNAME=$(dirname $INPUT_BAM)
+PREFIX=example.sorted
+
+module load samtools
+
+samtools addreplacerg -w -r "@RG\tID:RG1\tSM:SampleName\tPL:Illumina\tLB:Library.fa" -o ${DIRNAME}/${PREFIX}.bam ${INPUT_BAM}
+```
+This will create a new bam file named `example.sorted.bam` in the same directory as the input bam file, containing a new @RG line that looks like this:
+```
+@RG	ID:RG1	SM:SampleName	PL:Illumina	LB:Library.fa
+```
+
+Now we are ready for flagging duplicated reads with picard. To do so, prepare a script named `06-mark_duplicates.sh` with the following lines:
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=5 --mem=32g --gres=lscratch:40
@@ -332,24 +354,26 @@ module load picard/3.2.0
 
 # Enter bam file from the command line
 BAM=$1
-
+PREFIX=example
 OUTDIR=${WORKSHOPDIR}/Step5-markduplicates
+
+# Make output directory
+mkdir -p ${WORKSHOPDIR}/Step5-markduplicates
 
 java -Xmx32g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
   --INPUT ${BAM} \
-  --OUTPUT ${OUTDIR} \
-  --METRICS_FILE <File> \
+  --OUTPUT ${OUTDIR}/${PREFIX}.dedup.bam \
+  --METRICS_FILE ${OUTDIR}/${PREFIX}.metrix.txt \
   --CREATE_INDEX true \
   --REMOVE_DUPLICATES false \
-  --CREATE_INDEX true \
   --TMP_DIR /lscratch/$SLURM_JOBID
 
 ```
-Run the 05-mark_duplicates.sh script remotely with sbatch:
+Next, run the 05-mark_duplicates.sh script remotely with sbatch:
 ```
-sbatch lscratch:40
+sbatch ./05-mark_duplicates.sh ./Step4-mapping_star/example.sorted.bam 
 ```
-
+Picard MarkDuplicates requires a lot of memmory and disk space to run. Therefore, you need to make sure that you request enough memory if you are working with a big genome (human, mouse). This tool though will only require 5 CPUs, as configured above. You can monitor how much resources your program is using while runnign with the command `jobload -j job_#`.
 
 samtools index {output}
 
