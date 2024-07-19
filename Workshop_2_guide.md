@@ -294,7 +294,7 @@ This command will produce a bam file, which contains read mapping information. I
 
 **Note:** Another popular mapper for RNAseq analysis is [HISAT2](https://daehwankimlab.github.io/hisat2/).
 
-### C.6 Remove or flag deduplicate reads
+### C.6 Remove or flag deduplicated reads
 
 The next step requires the bam file to be sorted by read coordinates. In our case, STAR sorted the reads during the mapping step, but if that wasn't the case, then you can sort the bam file by read coordinate using samtools and the following command:
 ```
