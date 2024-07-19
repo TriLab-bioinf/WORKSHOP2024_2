@@ -5,6 +5,7 @@
 ### get example data
 
 ```
+ssh $USER@helix.nih.gov
 cp -r /scratch/wangy80/WGS_data ./
 ```
 
