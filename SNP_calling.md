@@ -92,9 +92,8 @@ As before, if you want to use sbatch you can run the script by adding the sbatch
 ```
 sbatch ./02-trim_reads_trimmomatic.sh ./WGS_data/example_R1.fastq.gz ./WGS_data/example_R2.fastq.gz
 ```
-
+For Single End:
 ```
-# Single End:
 java -jar trimmomatic-0.35.jar SE -phred33 input.fq.gz output.fq.gz ILLUMINACLIP:TruSeq3-SE:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
 ```
 
@@ -189,8 +188,16 @@ sbatch ./05-mark_duplicates.sh ./04-mapping_bwa/example_bwa_sorted.bam
 
 ### 4) Call SNPs (using bcftools) 
 ```
+#!/bin/bash
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=32g
+
+GENOME=./WGS_data/hg38_chr17.fa
+bamfile=$1
+PREFIX=${bamfile%.dedup.bam}
+
 module load bcftools
-bcftools mpileup -f hg38_chr17.fa example.dedup.bam | bcftools call -mv -Oz -o calls.vcf.gz
+bcftools mpileup -f $GENOME $bamfile | bcftools call -mv -Oz -o $PREFIX.vcf.gz
 ```
 
 ● bcftools mpileup
@@ -290,8 +297,9 @@ SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It
 #SBATCH --mem=32g
 
 module load snpEff
-#ln -s $SNPEFF_HOME/example/file.vcf .
-java -Xmx${SLURM_MEM_PER_NODE}m -jar $SNPEFF_JAR -v hg38 my.var-final.vcf.gz > example.eff.vcf
+VCFfile=$1
+
+java -Xmx${SLURM_MEM_PER_NODE}m -jar $SNPEFF_JAR -v hg38 $VCFfile > example.eff.vcf
 cat example.eff.vcf | java -jar $SNPSIFT_JAR filter "( EFF[*].IMPACT = 'HIGH' )" > example.filtered.vcf
 #java -jar $SNPSIFT_JAR dbnsfp -v -db /fdb/dbNSFP2/dbNSFP3.2a.txt.gz file.eff.vcf > example.annotated.vcf
 ```
