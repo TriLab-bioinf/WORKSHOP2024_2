@@ -1,6 +1,6 @@
 ## Workshop guide
 
-### A- File formats
+## A- File formats
 
 1. Fasta (examples: file.fa ; file.fasta ; file.fsa)
 ```
