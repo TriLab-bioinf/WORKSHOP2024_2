@@ -297,22 +297,17 @@ STAR wil output the bam file `example.bam` containing read mapping information.
 
 ### B.5 Deduplicate reads
 
-The next step requires the bam file to be sorted by read coordinates and indexed. In our case, STAR sorted the reads during the mapping step, but if that wasn't the case, then you can sort the bam file by read coordinate using samtools and the following command:
+The next step requires the bam file to be sorted by read coordinates. In our case, STAR sorted the reads during the mapping step, but if that wasn't the case, then you can sort the bam file by read coordinate using samtools and the following command:
 ```
 # Sort bam file by coordinate
 
-GENOME=${WORSHOPDIR}/data/GRCh38.chr17.fa
-PREFIX=example
-UNSORTED_BAM=$(WORKSHOPDIR}/Step4-mapping_star/${PREFIX}.bam
-
 module load samtools
-
 samtools sort --threads 8 \
   -O BAM \
-  --reference ${GENOME} \
+  --reference ${WORSHOPDIR}/data/GRCh38.chr17.fa \
   -T tmp_file \
   -o $(WORKSHOPDIR}/Step4-mapping_star/${PREFIX}.sorted.bam \
-  ${UNSORTED_BAM}
+  $(WORKSHOPDIR}/Step4-mapping_star/${PREFIX}.Aligned.sortedByCoord.out.bam
 ```
 
 **Step 3:**
