@@ -25,7 +25,7 @@ fastqc example_R2.fastq.gz
 sample=example
 adapter=/usr/local/apps/trimmomatic/0.39/adapters/TruSeq3-PE.fa
 module load trimmomatic || exit 1
-java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads $SLURM_CPUS_PER_TASK \
+java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads 12 \
     ${sample}_R1.fastq.gz ${sample}_R2.fastq.gz \
     ${sample}_forward_paired.fq.gz ${sample}_forward_unpaired.fq.gz \
     ${sample}_reverse_paired.fq.gz ${sample}_reverse_unpaired.fq.gz \
