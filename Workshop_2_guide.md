@@ -394,6 +394,9 @@ THREADS=8
 GTF=${WORKSHOPDIR}/data/gencode.v45.annotation.chr17.gtf
 OUTPUT_FILE=${WORKSHOPDIR}/Step6-read_counts/read_counts.txt
 
+# Make output direcory
+mkdir -p ${WORKSHOPDIR}/Step6-read_counts
+
 module load subread
 
 featureCounts -G ${GENOME} -T ${THREADS}\
