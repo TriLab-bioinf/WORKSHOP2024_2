@@ -1,17 +1,13 @@
 ### WORKSHOP2024_2
 
-#### Workshop outline:
+#### Workshop goal:
 
 
-1. File formats (fastq, sam/bam/, gff/gtf/, VCF)
-2. Read quality check (fastqc: example of low quality reads, example of reads with adapter contamination)
-
-3. Read trimming and filtering (trimmomatic? Try others as well?)
-4. Mapping reads to a reference genome (STAR, bwa/bowtie2?) Should we mention mapping of long reads?
-5. Remove duplicated reads (picard, have you tried samtools for this?)
-6. Quantification of reads per gene. (featureCounts)
-  . Counting reads or fragments
-  . Dealing with multimappers   
-8. SNP/INDEL calls and annotation.
-9. Generation of wig, bigwig, (tdf and bed ??) files from bam files 
-10. MultiQC to summarize program outputs. (example of rRNA contamination from yeast RNAseq from Orna - Report from the STAR mappings - see ppt in figures folder), )
+1. To learn about popular file formats (fastq, sam/bam/, gff/gtf/, VCF).
+2. To learn how to generate and interpret QC data from sequencing reads.
+3. To learn how to trim reads.
+4. Try different read mappers (STAR, BWA) with RNAseq and WGS sequencing datasets.
+5. Remove/flag duplicated reads.
+6. Quantification of reads per gene.
+8. SNP/INDEL calls.
+9. To learn how to generate wig, bigwig, tdf and bed files from bam files for visualization in IGV. 
