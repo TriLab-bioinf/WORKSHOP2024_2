@@ -98,6 +98,7 @@ OUTPUT=${sample}_bwa_sorted_dedup.bam
 
 ### 4) Call SNPs (using bcftools) 
 ```
+module load bcftools
 bcftools mpileup -f hg38_chr17.fa example_bwa_sorted_dedup.bam | bcftools call -mv -Oz -o calls.vcf.gz
 ```
 
