@@ -33,23 +33,48 @@ module load fastqc
 fastqc -o $OUTDIR $READ1 $READ2
 ```
 
-1.2 trimmomatic
+```
+./01-fastqc.sh ${WORKSHOPDIR}/WGS_data/example_R1.fastq.gz ${WORKSHOPDIR}/data/example_R2.fastq.gz
+```
+
+1.2 Trimming reads with trimmomatic
+Create the script 02-trim_reads_trimmomatic.sh with the following code:
+
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=32g
 
 ## This is for Paired End data
-sample=example
+
+# Load read files from the command line
+READ1=$1
+READ2=$2
+
+# Load some other variables
 adapter=/usr/local/apps/trimmomatic/0.39/adapters/TruSeq3-PE.fa
+THREADS=16
+OUTDIR_TRIMMOMATIC=${WORKSHOPDIR}/02-trimming_trimmomatic
+READNAME=$(basename ${READ1})
+PREFIX=${READNAME%.R1.fastq.gz}
+
+# Create output directory
+mkdir -p ${OUTDIR_FASTP}
+
+# run trimmomatic
 module load trimmomatic
 java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads 12 \
-    ${sample}_R1.fastq.gz ${sample}_R2.fastq.gz \
-    ${sample}_forward_paired.fq.gz ${sample}_forward_unpaired.fq.gz \
-    ${sample}_reverse_paired.fq.gz ${sample}_reverse_unpaired.fq.gz \
+    $READ1 $READ2 \
+    $OUTDIR_TRIMMOMATIC/${prefix}_forward_paired.fq.gz $OUTDIR_TRIMMOMATIC/${prefix}_forward_unpaired.fq.gz \
+    $OUTDIR_TRIMMOMATIC/${prefix}_reverse_paired.fq.gz $OUTDIR_TRIMMOMATIC/${prefix}_reverse_unpaired.fq.gz \
     ILLUMINACLIP:$adapter:2:30:10 LEADING:3 TRAILING:3 \
     SLIDINGWINDOW:4:15 MINLEN:36
 ```
+
+```
+./02-trim_reads_fastp.sh ./data/example.R1.fastq.gz ./data/example.R2.fastq.gz
+```
+
 
 This will perform the following:
 
@@ -63,6 +88,16 @@ Scan the read with a 4-base wide sliding window, cutting when the average qualit
 
 Drop reads below the 36 bases long (MINLEN:36)
 
+Make the script executable with chmod +x 02-trim_reads_fastp.sh and run it locally like this:
+
+```
+./02-trim_reads_trimmomatic.sh ./WGS_data/example_R1.fastq.gz ./WGS_data/example_R2.fastq.gz
+```
+As before, if you want to use sbatch you can run the script by adding the sbatch command at the front:
+```
+sbatch ./02-trim_reads_trimmomatic.sh ./WGS_data/example_R1.fastq.gz ./WGS_data/example_R2.fastq.gz
+```
+
 ```
 # Single End:
 java -jar trimmomatic-0.35.jar SE -phred33 input.fq.gz output.fq.gz ILLUMINACLIP:TruSeq3-SE:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
@@ -73,9 +108,21 @@ java -jar trimmomatic-0.35.jar SE -phred33 input.fq.gz output.fq.gz ILLUMINACLIP
 BWA is a software package for mapping low-divergent sequences against a large reference genome, such as the human genome. It consists of three algorithms: BWA-backtrack, BWA-SW and BWA-MEM. The first algorithm is designed for Illumina sequence reads up to 100bp, while the rest two for longer sequences ranged from 70bp to 1Mbp. BWA-MEM and BWA-SW share similar features such as long-read support and split alignment, but BWA-MEM, which is the latest, is generally recommended for high-quality queries as it is faster and more accurate. BWA-MEM also has better performance than BWA-backtrack for 70-100bp Illumina reads.
 
 2.1.	Index the reference (genome) sequence 
+Create a script named "03-create_bwa_index.sh" with the following commands.
 ```
+#!/bin/bash
+#SBATCH --cpus-per-task=16 --mem=32g
+
+genome=$1
+OUTDIR=03-reference_index
+
 module load bwa
-bwa index hg38_chr17.fa
+bwa index $genome -p $OUTDIR
+```
+
+And then run the script, after making it executable, like this:
+```
+./03-create_bwa_index.sh ./WGS_data/hg38_chr17.fa
 ```
 
 2.2.	Perform the alignment 
@@ -84,43 +131,72 @@ bwa index hg38_chr17.fa
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=32g
 
+# Load read files from the command line
+READ1=$1
+READ2=$2
+
+# STAR-specific variables
+THREADS=16
+REFERENCE=${WORKSHOPDIR}/03-reference_index
+OUTDIR=${WORKSHOPDIR}/04-mapping_bwa
+READ_NAME=$(basename $READ1)
+PREFIX=${READ_NAME%_forward_paired.fastq.gz}
+
 module load bwa
 module load samtools
 
 genome=hg38_chr17.fa
-id=example
-sm=example
-bwa mem -t 32 \
+id=$PREFIX
+sm=$PREFIX
+
+bwa mem -t ${THREADS} \
         -R "@RG\tID:$id\tPL:ILLUMINA\tSM:$sm" \
-        $genome \
-        ${sm}_forward_paired.fq.gz \
-        ${sm}_reverse_paired.fq.gz \
+        $REFERENCE/$genome \
+        $READ1 \
+        $READ2 \
         | samtools sort \
-        -@ 16 \
+        -@ ${THREADS} \
         -O BAM \
-        -o ${sm}_bwa_sorted.bam
+        -o $PREFIX_bwa_sorted.bam
+```
+Then run the script 04-mapping_reads_star.sh in a Biowulf node like this:
+```
+sbatch ./04-mapping_reads_bwa.sh ./02-trimming_trimmomatic/example_forward_paired.fastq.gz ./02-trimming_trimmomatic/example_reverse_paired.fastq.gz
 ```
 
 ### 3) Mark Duplicates
 ```
 #!/bin/bash
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=32g
+#SBATCH --cpus-per-task=5 --mem=32g --gres=lscratch:40
 
-module load picard
-sample=example
-time java -Xmx8g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
-CREATE_INDEX=true \
-METRICS_FILE=$sample.metrix.txt \
-INPUT=${sample}_bwa_sorted.bam \
-REMOVE_DUPLICATES=false \
-OUTPUT=${sample}_bwa_sorted_dedup.bam
+# Flag duplicated reads with Picard
+module load picard/3.2.0
+
+# Enter bam file from the command line
+BAM=$1
+PREFIX=example
+OUTDIR=${WORKSHOPDIR}/05-markduplicates
+
+# Make output directory
+mkdir -p ${WORKSHOPDIR}/05-markduplicates
+
+java -Xmx32g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
+  --INPUT ${BAM} \
+  --OUTPUT ${OUTDIR}/${PREFIX}.dedup.bam \
+  --METRICS_FILE ${OUTDIR}/${PREFIX}.metrix.txt \
+  --CREATE_INDEX true \
+  --REMOVE_DUPLICATES false \
+  --TMP_DIR /lscratch/$SLURM_JOBID
+```
+Next, run 06-mark_duplicates.sh remotely with sbatch:
+```
+sbatch ./06-mark_duplicates.sh ./04-mapping_bwa/example_bwa_sorted.bam
 ```
 
 ### 4) Call SNPs (using bcftools) 
 ```
 module load bcftools
-bcftools mpileup -f hg38_chr17.fa example_bwa_sorted_dedup.bam | bcftools call -mv -Oz -o calls.vcf.gz
+bcftools mpileup -f hg38_chr17.fa example.dedup.bam | bcftools call -mv -Oz -o calls.vcf.gz
 ```
 
 ● bcftools mpileup
