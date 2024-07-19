@@ -211,7 +211,7 @@ For bulk RNAseq, the process is to extract the UMIs from the read sequence and a
 
 ### C.5 Mapping reads 
 
-Next step is to map the trimmed (filtered) reads to the reference genome. In our case we will use the human chromosome 17 as reference. In general, any mapping program require the referece sequence to be indexed before it can start mapping the reads. Genome indexing might take several hours for large genomes as the Human or Mouse genomes. Fortunately, index files are already available for most common model organisms, which can be found in Biowulf under the following path:
+Next step is to map the trimmed (filtered) reads to the reference genome. In our case, we will use the human chromosome 17 as reference and the read-mapper `STAR`. In general, any read-mapper program requires the referece sequence to be indexed before it can start mapping the reads. Genome indexing might take several hours for large genomes as the Human or Mouse genomes. Fortunately, index files are already available for most common model organisms, which can be found in Biowulf under the following path:
 
 ```
 /fdb/STAR_indices/2.7.11b/GENCODE/Gencode_human/release_39/ref/Genome
