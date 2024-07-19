@@ -75,7 +75,12 @@ export WORKSHOPDIR=/data/$USER/WORKSHOP2024_2
 
 ## C- Proprocessing of sequencing reads for RNAseq analysis
 
-### C.1 Workflow:
+### C.1 Workflows:
+There are many different RNAseq processing workflows that you can use to analyze you data. The main factor to consider when choosing the read processing approach is what the goal is of your project or what is the question you are trying to answer. The figure below depicts a number of potential workflows that can be used, but many more combinations are possible!
+![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/alternative_RNAseq_pipelines.png)
+*From: Corchete, L.A., Rojas, E.A., Alonso-López, D. et al. Systematic comparison and assessment of RNA-seq procedures for gene expression quantitative analysis. Sci Rep 10, 19737 (2020). https://doi.org/10.1038/s41598-020-76881-x*
+
+The workflow we will be using during the workshop for processing bulk RNAseq data is summarized below:
 ![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/RNAseq.png)
 
 ### C.2 Quality control of sequencing data 
