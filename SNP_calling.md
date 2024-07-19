@@ -4,17 +4,24 @@
 
 ### 1) Quality Control
 1.1 Fastqc
+```
+module load fastqc
+fastqc example_R1.fastq.gz
+fastqc example_R2.fastq.gz
+```
 
 1.2 trimmomatic
 ```
 #!/bin/bash
 ## This is for Paired End data
+sample=example
+adapter=/usr/local/apps/trimmomatic/0.39/adapters/TruSeq3-PE.fa
 module load trimmomatic || exit 1
 java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads $SLURM_CPUS_PER_TASK \
-    ERR194160_1.fastq.gz ERR194160_2.fastq.gz \
-    output_forward_paired.fq.gz output_forward_unpaired.fq.gz \
-    output_reverse_paired.fq.gz output_reverse_unpaired.fq.gz \
-    ILLUMINACLIP:/usr/local/apps/trimmomatic/0.39/adapters/TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 \
+    ${sample}_R1.fastq.gz ${sample}_R2.fastq.gz \
+    ${sample}_forward_paired.fq.gz ${sample}_forward_unpaired.fq.gz \
+    ${sample}_reverse_paired.fq.gz ${sample}_reverse_unpaired.fq.gz \
+    ILLUMINACLIP:$adapter:2:30:10 LEADING:3 TRAILING:3 \
     SLIDINGWINDOW:4:15 MINLEN:36
 ```
 
@@ -47,31 +54,40 @@ bwa index hg38_chr17.fa
 
 2.2.	Perform the alignment 
 ```
+#!/bin/bash
+module load bwa
+module load samtools
+
 genome=hg38_chr17.fa
+id=example
+sm=example
 bwa mem -t 32 \
-        -R "@RG\tID:$id\tPL:ILLUMINA\tLB:$lb\tSM:$sm" \
+        -R "@RG\tID:$id\tPL:ILLUMINA\tSM:$sm" \
         $genome \
-        output_forward_paired.fq.gz \
-        output_reverse_paired.fq.gz \
+        ${sm}_forward_paired.fq.gz \
+        ${sm}_reverse_paired.fq.gz \
         | samtools sort \
         -@ 12 \
         -O BAM \
-        -o ERR194160_bwa_sorted.bam \
-        2> mapping.log
+        -o ${sm}_bwa_sorted.bam
 ```
 
 ### 3) Mark Duplicates
 ```
+#!/bin/bash
 module load picard
-java -Xmx4g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
+sample=example
+time java -Xmx8g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
 CREATE_INDEX=true \
-INPUT=<input.bam> \
-VALIDATION_STRINGENCY=STRICT
+METRICS_FILE=$sample.metrix.txt \
+INPUT=${sample}_bwa_sorted.bam \
+REMOVE_DUPLICATES=false \
+OUTPUT=${sample}_bwa_sorted_dedup.bam
 ```
 
 ### 4) Call SNPs (using bcftools) 
 ```
-bcftools mpileup -f reference.fa alignments.bam | bcftools call -mv -Oz -o calls.vcf.gz
+bcftools mpileup -f hg38_chr17.fa example_bwa_sorted_dedup.bam | bcftools call -mv -Oz -o calls.vcf.gz
 ```
 
 ● bcftools mpileup
@@ -113,10 +129,10 @@ SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It
 # -- this file is snpEff.sh --
 
 module load snpEff
-ln -s $SNPEFF_HOME/example/file.vcf .
-java -Xmx${SLURM_MEM_PER_NODE}m -jar $SNPEFF_JAR -v hg19 file.vcf > file.eff.vcf
-cat file.eff.vcf | java -jar $SNPSIFT_JAR filter "( EFF[*].IMPACT = 'HIGH' )" > file.filtered.vcf
-java -jar $SNPSIFT_JAR dbnsfp -v -db /fdb/dbNSFP2/dbNSFP3.2a.txt.gz file.eff.vcf > file.annotated.vcf
+#ln -s $SNPEFF_HOME/example/file.vcf .
+java -Xmx${SLURM_MEM_PER_NODE}m -jar $SNPEFF_JAR -v hg38 calls.vcf.gz > example.eff.vcf
+cat example.eff.vcf | java -jar $SNPSIFT_JAR filter "( EFF[*].IMPACT = 'HIGH' )" > example.filtered.vcf
+java -jar $SNPSIFT_JAR dbnsfp -v -db /fdb/dbNSFP2/dbNSFP3.2a.txt.gz file.eff.vcf > example.annotated.vcf
 ```
 
 ## VCF file formats
@@ -181,18 +197,18 @@ Individual identifier: The previous column told us to expect to see genotypes he
 ### wig: computes average alignment or feature density for over a specified window size across the genome
 ```
 module load IGVTools
-igvtools count NA12878.bam NA12878.wig hg38.fa
+igvtools count example_bwa_sorted_dedup.bam example_bwa_sorted_dedup.wig hg38_chr17.fa
 ```
 
 ### convert an wig file to tiled data format (tdf)
 ```
-igvtools toTDF NA12878.wig NA12878.tdf hg38.fa
+igvtools toTDF example_bwa_sorted_dedup.wig example_bwa_sorted_dedup.tdf hg38_chr17.fa
 ```
 
 ### wig to bigwig
 ```
 module load ucsc 
-wigToBigWig in.wig chrom.sizes out.bw
+wigToBigWig example_bwa_sorted_dedup.wig chrom.sizes example_bwa_sorted_dedup.bw
 ```
 
 ## gff/gtf files conversion to bed
