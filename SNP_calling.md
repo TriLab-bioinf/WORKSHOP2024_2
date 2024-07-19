@@ -125,13 +125,7 @@ Other useful metrics are:
 
 ● etc.
 
-To give a concrete example, the following filter seemed to work quite well for one particular dataset (human data, exomes):
 
-```
-bcftools filter -sLowQual -g3 -G10 \
-    -e'%QUAL<10 || (RPB<0.1 && %QUAL<15) || (AC<2 && %QUAL<15) || %MAX(DV)<=3 || %MAX(DV)/%MAX(DP)<=0.3' \
-    calls.vcf.gz
-```
 
 ### 6) SNP annotations
 SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
