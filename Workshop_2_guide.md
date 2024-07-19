@@ -449,3 +449,4 @@ This command will generate a html file named `multiqc_report.html` that can be i
 
 ![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/rRNA_contamination_example.png)
 
+This rRNA contamination was further confirmed by visualization of mapped reads in IGV.
