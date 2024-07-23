@@ -225,8 +225,9 @@ sbatch ./06-call_SNPs.sh ./05-markduplicates/example.dedup.bam
 ### 5) Filter SNPs 
 Variant filtering is not easy. The variant callers provide a quality score (the QUAL) column, which gives an estimate of how likely it is to observe a call purely by chance. An easy way to filter low quality calls is
 ```
-bcftools filter -e 'QUAL<20' calls.vcf.gz -O z -o my.var-final.vcf.gz
+bcftools filter -e 'QUAL<20' 06-SNPcalling/example.vcf.gz -O z -o 06-SNPcalling/my.var-final.vcf.gz
 ```
+
 Other useful metrics are:
 
 ● sequencing depth (DP bigger than twice the average depth indicates problematic regions and is often enriched for artefacts)
