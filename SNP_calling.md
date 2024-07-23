@@ -112,7 +112,7 @@ genome=$1
 OUTDIR=03-reference_index
 
 module load bwa
-bwa index $genome -p $OUTDIR
+bwa index $genome -p ${OUTDIR}/hg38_chr17
 ```
 
 And then run the script, after making it executable, like this:
