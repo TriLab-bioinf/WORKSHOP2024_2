@@ -57,7 +57,7 @@ adapter=/usr/local/apps/trimmomatic/0.39/adapters/TruSeq3-PE.fa
 THREADS=16
 OUTDIR_TRIMMOMATIC=${WORKSHOPDIR}/02-trimming_trimmomatic
 READNAME=$(basename ${READ1})
-PREFIX=${READNAME%.R1.fastq.gz}
+PREFIX=${READNAME%_R1.fastq.gz}
 
 # Create output directory
 mkdir -p ${OUTDIR_TRIMMOMATIC}
