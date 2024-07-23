@@ -198,10 +198,20 @@ sbatch ./05-mark_duplicates.sh ./04-mapping_bwa/example_bwa_sorted.bam
 
 GENOME=./WGS_data/hg38_chr17.fa
 bamfile=$1
-PREFIX=${bamfile%.dedup.bam}
+
+OUTDIR=${WORKSHOPDIR}/06-SNPcalling
+mkdir -p $OUTDIR
+
+READ_NAME=$(basename bamfile)
+PREFIX=${READ_NAME%.dedup.bam}
 
 module load bcftools
-bcftools mpileup -f $GENOME $bamfile | bcftools call -mv -Oz -o $PREFIX.vcf.gz
+bcftools mpileup -f $GENOME $bamfile | bcftools call -mv -Oz -o $OUTDIR/$PREFIX.vcf.gz
+```
+
+Next, run 05-mark_duplicates.sh remotely with sbatch:
+```
+sbatch ./06-call_SNPs.sh ./05-markduplicates/example.dedup.bam
 ```
 
 ● bcftools mpileup
