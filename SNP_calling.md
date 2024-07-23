@@ -34,6 +34,7 @@ fastqc -o $OUTDIR $READ1 $READ2
 ```
 
 ```
+export WORKSHOPDIR=/gpfs/gsfs12/users/wangy80/WORKSHOP2024_2
 ./01-fastqc.sh ${WORKSHOPDIR}/WGS_data/example_R1.fastq.gz ${WORKSHOPDIR}/data/example_R2.fastq.gz
 ```
 
