@@ -135,6 +135,8 @@ READ2=$2
 THREADS=16
 REFERENCE=${WORKSHOPDIR}/03-reference_index/hg38_chr17
 OUTDIR=${WORKSHOPDIR}/04-mapping_bwa
+mkdir -p ${OUTDIR}
+
 READ_NAME=$(basename $READ1)
 PREFIX=${READ_NAME%_forward_paired.fq.gz}
 
