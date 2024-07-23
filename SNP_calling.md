@@ -175,7 +175,7 @@ PREFIX=example
 OUTDIR=${WORKSHOPDIR}/05-markduplicates
 
 # Make output directory
-mkdir -p ${WORKSHOPDIR}/05-markduplicates
+mkdir -p $OUTDIR
 
 java -Xmx32g -XX:ParallelGCThreads=5 -jar $PICARDJARPATH/picard.jar MarkDuplicates \
   --INPUT ${BAM} \
