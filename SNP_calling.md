@@ -133,11 +133,11 @@ READ2=$2
 
 # variables setting
 THREADS=16
-REFERENCE=${WORKSHOPDIR}/03-reference_index
+REFERENCE=${WORKSHOPDIR}/03-reference_index/hg38_chr17
 OUTDIR=${WORKSHOPDIR}/04-mapping_bwa
 READ_NAME=$(basename $READ1)
-PREFIX=${READ_NAME%_forward_paired.fastq.gz}
-genome=hg38_chr17.fa
+PREFIX=${READ_NAME%_forward_paired.fq.gz}
+
 id=$PREFIX
 sm=$PREFIX
 
@@ -146,17 +146,17 @@ module load samtools
 
 bwa mem -t ${THREADS} \
         -R "@RG\tID:$id\tPL:ILLUMINA\tSM:$sm" \
-        $REFERENCE/$genome \
+        $REFERENCE \
         $READ1 \
         $READ2 \
         | samtools sort \
         -@ ${THREADS} \
         -O BAM \
-        -o $PREFIX_bwa_sorted.bam
+        -o ${OUTDIR}/${PREFIX}_bwa_sorted.bam
 ```
 Then run the script 04-mapping_reads_bwa.sh in a Biowulf node like this:
 ```
-sbatch ./04-mapping_reads_bwa.sh ./02-trimming_trimmomatic/example_forward_paired.fastq.gz ./02-trimming_trimmomatic/example_reverse_paired.fastq.gz
+sbatch ./04-mapping_reads_bwa.sh ./02-trimming_trimmomatic/example_forward_paired.fq.gz ./02-trimming_trimmomatic/example_reverse_paired.fq.gz
 ```
 
 ### 3) Mark Duplicates
