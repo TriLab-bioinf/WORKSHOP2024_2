@@ -66,8 +66,8 @@ mkdir -p ${OUTDIR_TRIMMOMATIC}
 module load trimmomatic
 java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads 12 \
     $READ1 $READ2 \
-    $OUTDIR_TRIMMOMATIC/${prefix}_forward_paired.fq.gz $OUTDIR_TRIMMOMATIC/${prefix}_forward_unpaired.fq.gz \
-    $OUTDIR_TRIMMOMATIC/${prefix}_reverse_paired.fq.gz $OUTDIR_TRIMMOMATIC/${prefix}_reverse_unpaired.fq.gz \
+    $OUTDIR_TRIMMOMATIC/${PREFIX}_forward_paired.fq.gz $OUTDIR_TRIMMOMATIC/${PREFIX}_forward_unpaired.fq.gz \
+    $OUTDIR_TRIMMOMATIC/${PREFIX}_reverse_paired.fq.gz $OUTDIR_TRIMMOMATIC/${PREFIX}_reverse_unpaired.fq.gz \
     ILLUMINACLIP:$adapter:2:30:10 LEADING:3 TRAILING:3 \
     SLIDINGWINDOW:4:15 MINLEN:36
 ```
