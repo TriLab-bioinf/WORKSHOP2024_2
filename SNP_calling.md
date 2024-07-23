@@ -110,6 +110,7 @@ Create a script named "03-create_bwa_index.sh" with the following commands.
 
 genome=$1
 OUTDIR=03-reference_index
+mkdir -p ${OUTDIR}
 
 module load bwa
 bwa index $genome -p ${OUTDIR}/hg38_chr17
