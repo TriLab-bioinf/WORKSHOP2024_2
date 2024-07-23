@@ -60,7 +60,7 @@ READNAME=$(basename ${READ1})
 PREFIX=${READNAME%.R1.fastq.gz}
 
 # Create output directory
-mkdir -p ${OUTDIR_FASTP}
+mkdir -p ${OUTDIR_TRIMMOMATIC}
 
 # run trimmomatic
 module load trimmomatic
