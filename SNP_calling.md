@@ -202,7 +202,7 @@ bamfile=$1
 OUTDIR=${WORKSHOPDIR}/06-SNPcalling
 mkdir -p $OUTDIR
 
-READ_NAME=$(basename bamfile)
+READ_NAME=$(basename $bamfile)
 PREFIX=${READ_NAME%.dedup.bam}
 
 module load bcftools
