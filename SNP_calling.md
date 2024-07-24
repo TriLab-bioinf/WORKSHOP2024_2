@@ -222,6 +222,9 @@ sbatch ./06-call_SNPs.sh ./05-markduplicates/example.dedup.bam
 
  Applies the prior and does the actual calling. The -m switch tells the program to use the default calling method, the -v option asks to output only variant sites, finally the -O option selects the output format.
 
+Note: Another popular mapper for SNP calling is GATK.
+
+
 ### 5) Filter SNPs 
 Variant filtering is not easy. The variant callers provide a quality score (the QUAL) column, which gives an estimate of how likely it is to observe a call purely by chance. An easy way to filter low quality calls is
 ```
