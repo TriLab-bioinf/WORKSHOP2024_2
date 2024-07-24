@@ -420,7 +420,7 @@ wigToBigWig example.dedup.wig chrom.sizes example.dedup.bw
 ## gff/gtf files conversion to bed
 ```
 module load bedops
-convert2bed --input=fmt [--output=fmt] [options] < input > output
+convert2bed --input=gtf --output=bed < data/gencode.v45.annotation.chr17.gtf > gencode.v45.annotation.chr17.bed
 ```
 
 ## IGV visualization
