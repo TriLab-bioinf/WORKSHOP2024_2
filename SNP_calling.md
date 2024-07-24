@@ -349,8 +349,43 @@ chr17   17042759        .       CG      CGG     26.4242 PASS    INDEL;IDV=2;IMF=
 chr17   75589275        .       G       A       25.4267 PASS    DP=2;VDB=0.5;SGB=-0.453602;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60;ANN=A|stop_gained|HIGH|MYO15B|MYO15B|transcript|NM_001309242.1|protein_coding|1/63|c.1218G>A|p.Trp406*|1218/9540|1218/9177|406/3058||;LOF=(MYO15B|MYO15B|1|1.00);NMD=(MYO15B|MYO15B|1|1.00)     GT:PL   1/1:55,6,0
 chr17   21300898        .       C       T       74.4149 PASS    DP=3;VDB=0.0785113;SGB=-0.511536;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,1,2;MQ=60;ANN=T|stop_gained|HIGH|MAP2K3|MAP2K3|transcript|NM_145109.3|protein_coding|5/12|c.304C>T|p.Gln102*|514/2239|304/1044|102/347||,T|stop_gained|HIGH|MAP2K3|MAP2K3|transcript|NM_001316332.2|protein_coding|6/13|c.217C>T|p.Gln73*|639/2364|217/957|73/318||,T|stop_gained|HIGH|MAP2K3|MAP2K3|transcript|NM_002756.4|protein_coding|5/12|c.217C>T|p.Gln73*|311/2060|217/957|73/318||;LOF=(MAP2K3|MAP2K3|3|1.00);NMD=(MAP2K3|MAP2K3|3|1.00) GT:PL   1/1:104,9,0
 chr17   75589275        .       G       A       25.4267 PASS    DP=2;VDB=0.5;SGB=-0.453602;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60;ANN=A|stop_gained|HIGH|MYO15B|MYO15B|transcript|NM_001309242.1|protein_coding|1/63|c.1218G>A|p.Trp406*|1218/9540|1218/9177|406/3058||;LOF=(MYO15B|MYO15B|1|1.00);NMD=(MYO15B|MYO15B|1|1.00)     GT:PL   1/1:55,6,0
-
 ```
+
+Here is a description of the meaning of each sub-field:
+1. Allele (or ALT): In case of multiple ALT fields, this helps to identify which ALT we are referring to. E.g.:
+```
+# CHROM  POS     ID  REF  ALT    QUAL  FILTER  INFO
+chr1    123456  .   C    A      .     .       ANN=A|...
+chr1    234567  .   A    G,T    .     .       ANN=G|... , T|...
+```
+2. Annotation (a.k.a. effect): Annotated using Sequence Ontology terms. Multiple effects can be concatenated using '&'.
+```
+#CHROM  POS     ID  REF  ALT  QUAL  FILTER  INFO
+chr1    123456  .   C    A    .     .      ANN=A|intron_variant&nc_transcript_variant|...
+```
+3. Putative_impact: A simple estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}
+4. Gene Name: Common gene name (HGNC). Optional: use closest gene when the variant is "intergenic".
+5. Gene ID: Gene ID
+6. Feature type: Which type of feature is in the next field (e.g. transcript, motif, miRNA, etc.). It is preferred to use Sequence Ontology (SO) terms, but 'custom' (user defined) are allowed.
+7. Feature ID: Depending on the annotation, this may be: Transcript ID (preferably using version number), Motif ID, miRNA, ChipSeq peak, Histone mark, etc. Note: Some features may not have ID (e.g. histone marks from custom Chip-Seq experiments may not have a unique ID).
+8. Transcript biotype: The bare minimum is at least a description on whether the transcript is {"Coding", "Noncoding"}. Whenever possible, use ENSEMBL biotypes.
+9. Rank / total: Exon or Intron rank / total number of exons or introns.
+10. HGVS.c: Variant using HGVS notation (DNA level)
+11. HGVS.p: If variant is coding, this field describes the variant using HGVS notation (Protein level). Since transcript ID is already mentioned in 'feature ID', it may be omitted here.
+12. cDNA_position / cDNA_len: Position in cDNA and trancript's cDNA length (one based).
+13. CDS_position / CDS_len: Position and number of coding bases (one based includes START and STOP codons).
+14. Protein_position / Protein_len: Position and number of AA (one based, including START, but not STOP).
+15. Distance to feature: All items in this field are options, so the field could be empty.
+    Up/Downstream: Distance to first / last codon
+    Intergenic: Distance to closest gene
+    Distance to closest Intron boundary in exon (+/- up/downstream). If same, use positive number.
+    Distance to closest exon boundary in Intron (+/- up/downstream)
+    Distance to first base in MOTIF
+    Distance to first base in miRNA
+    Distance to exon-intron boundary in splice_site or splice _region
+    ChipSeq peak: Distance to summit (or peak center)
+    Histone mark / Histone state: Distance to summit (or peak center)
+16. Errors, Warnings or Information messages: Add errors, warnings or informative message that can affect annotation accuracy.
 
  
 ## Bam files conversion to wig, bigwig and tdf
