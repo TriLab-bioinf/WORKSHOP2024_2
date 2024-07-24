@@ -39,6 +39,7 @@ export WORKSHOPDIR=/gpfs/gsfs12/users/wangy80/WORKSHOP2024_2
 ```
 
 1.2 Trimming reads with trimmomatic
+
 Create the script 02-trim_reads_trimmomatic.sh with the following code:
 
 ```
@@ -74,15 +75,11 @@ java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads 12 \
 
 This will perform the following:
 
-Remove adapters (ILLUMINACLIP:TruSeq3-PE.fa:2:30:10)
-
-Remove leading low quality or N bases (below quality 3) (LEADING:3)
-
-Remove trailing low quality or N bases (below quality 3) (TRAILING:3)
-
-Scan the read with a 4-base wide sliding window, cutting when the average quality per base drops below 15 (SLIDINGWINDOW:4:15)
-
-Drop reads below the 36 bases long (MINLEN:36)
+1. Remove adapters (ILLUMINACLIP:TruSeq3-PE.fa:2:30:10)
+2. Remove leading low quality or N bases (below quality 3) (LEADING:3)
+3. Remove trailing low quality or N bases (below quality 3) (TRAILING:3)
+4. Scan the read with a 4-base wide sliding window, cutting when the average quality per base drops below 15 (SLIDINGWINDOW:4:15)
+5. Drop reads below the 36 bases long (MINLEN:36)
 
 Make the script executable with chmod +x 02-trim_reads_trimmomatic.sh and run it locally like this:
 
@@ -121,7 +118,9 @@ And then run the script, after making it executable, like this:
 ./03-create_bwa_index.sh ./WGS_data/hg38_chr17.fa
 ```
 
-2.2.	Perform the alignment 
+2.2.	Perform the alignment
+
+Create the script 04-mapping_reads_bwa.sh with the following code:
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
@@ -161,7 +160,9 @@ Then run the script 04-mapping_reads_bwa.sh in a Biowulf node like this:
 sbatch ./04-mapping_reads_bwa.sh ./02-trimming_trimmomatic/example_forward_paired.fq.gz ./02-trimming_trimmomatic/example_reverse_paired.fq.gz
 ```
 
-### 3) Mark Duplicates
+### 3) Mark Duplicates with Picard
+
+Create the script 05-mark_duplicates.sh with the following code:
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=5 --mem=32g --gres=lscratch:40
@@ -191,6 +192,9 @@ sbatch ./05-mark_duplicates.sh ./04-mapping_bwa/example_bwa_sorted.bam
 ```
 
 ### 4) Call SNPs (using bcftools) 
+
+Create the script 06-call_SNPs.sh with the following code:
+
 ```
 #!/bin/bash
 #SBATCH --cpus-per-task=16
@@ -308,6 +312,8 @@ Individual identifier: The previous column told us to expect to see genotypes he
 
 ### 6) SNP annotations
 SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
+
+Create the script 07-annotate_SNPs.sh with the following code:
 
 ```
 #!/bin/bash
@@ -458,6 +464,7 @@ We can use samtools faidx reference genome and get fai file, then cut the first 
 module load samtools
 module load ucsc
 
+## create fasta index file
 samtools faidx WGS_data/hg38_chr17.fa
 cut -f1,2 WGS_data/hg38_chr17.fa.fai >chrom.sizes
 
