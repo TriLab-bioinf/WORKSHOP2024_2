@@ -425,8 +425,6 @@ variableStep chrom=chr17 span=25
 60176   1.28
 ```
 
-We can also do some normalization on wig file when we need to compare multiple samples.
-
 ### convert an wig file to tiled data format (tdf)
 ```
 igvtools toTDF example.dedup.wig example.dedup.tdf WGS_data/hg38_chr17.fa
