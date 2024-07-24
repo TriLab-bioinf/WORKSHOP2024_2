@@ -79,15 +79,15 @@ This will perform the following:
 
 1. Remove adapters (ILLUMINACLIP:TruSeq3-PE.fa:2:30:10)
 
-   ILLUMINACLIP:fastaWithAdaptersEtc:seed mismatches:palindrome clip threshold:simple clip threshold
+   ILLUMINACLIP: fastaWithAdaptersEtc: seed mismatches : palindrome clip threshold : simple clip threshold
    
-● fastaWithAdaptersEtc: specifies the path to a fasta file containing all the adapters, PCR sequences etc. The naming of the various sequences within this file determines how they are used.
+    ● **fastaWithAdaptersEtc**: specifies the path to a fasta file containing all the adapters, PCR sequences etc. The naming of the various sequences within this file determines how they are used.
 
-● seedMismatches: specifies the maximum mismatch count which will still allow a full match to be performed
+    ● **seedMismatches**: specifies the maximum mismatch count which will still allow a full match to be performed
 
-● palindromeClipThreshold: specifies how accurate the match between the two 'adapter ligated' reads must be for PE palindrome read alignment.
+    ● **palindromeClipThreshold**: specifies how accurate the match between the two 'adapter ligated' reads must be for PE palindrome read alignment.
 
-● simpleClipThreshold: specifies how accurate the match between any adapter etc. sequence must be against a read.
+    ● **simpleClipThreshold**: specifies how accurate the match between any adapter etc. sequence must be against a read.
 
 2. Remove leading low quality or N bases (below quality 3) (LEADING:3)
 3. Remove trailing low quality or N bases (below quality 3) (TRAILING:3)
