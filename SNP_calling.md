@@ -364,6 +364,7 @@ chr1    234567  .   A    G,T    .     .       ANN=G|... , T|...
 chr1    123456  .   C    A    .     .      ANN=A|intron_variant&nc_transcript_variant|...
 ```
 3. Putative_impact: A simple estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}
+   
 | **Impact**  | **Meaning** | **Example** |
 | ------------- | ------------- | ------------- |
 | HIGH  | The variant is assumed to have high (disruptive) impact in the protein, probably causing protein truncation, loss of function or triggering nonsense mediated decay. | stop_gained, frameshift_variant |
