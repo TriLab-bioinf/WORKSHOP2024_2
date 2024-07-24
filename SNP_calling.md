@@ -209,7 +209,7 @@ module load bcftools
 bcftools mpileup -f $GENOME $bamfile | bcftools call -mv -Oz -o $OUTDIR/$PREFIX.vcf.gz
 ```
 
-Next, run 05-mark_duplicates.sh remotely with sbatch:
+Next, run 06-call_SNPs.sh remotely with sbatch:
 ```
 sbatch ./06-call_SNPs.sh ./05-markduplicates/example.dedup.bam
 ```
@@ -314,10 +314,19 @@ SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It
 module load snpEff
 VCFfile=$1
 
-java -Xmx${SLURM_MEM_PER_NODE}m -jar $SNPEFF_JAR -v hg38 $VCFfile > example.eff.vcf
-cat example.eff.vcf | java -jar $SNPSIFT_JAR filter "( EFF[*].IMPACT = 'HIGH' )" > example.filtered.vcf
+OUTDIR=${WORKSHOPDIR}/07-SNPannotation
+mkdir -p $OUTDIR
+
+java -Xmx${SLURM_MEM_PER_NODE}m -jar $SNPEFF_JAR -v hg38 $VCFfile > $OUTDIR/example.eff.vcf
+cat $OUTDIR/example.eff.vcf | java -jar $SNPSIFT_JAR filter "( EFF[*].IMPACT = 'HIGH' )" > $OUTDIR/example.filtered.vcf
 #java -jar $SNPSIFT_JAR dbnsfp -v -db /fdb/dbNSFP2/dbNSFP3.2a.txt.gz file.eff.vcf > example.annotated.vcf
 ```
+
+Next, run 07-annotate_SNPs.sh remotely with sbatch:
+```
+sbatch ./07-annotate_SNPs.sh ./06-SNPcalling/my.var-final.vcf.gz
+```
+
 
 After SnpEff annotation, the information is added into INFO column
 ```
@@ -342,7 +351,7 @@ chr17   17042759        .       CG      CGG     26.4242 PASS    INDEL;IDV=2;IMF=
 ```
 module load IGVTools
 igvtools --memory 20g
-igvtools count example_bwa_sorted_dedup.bam example_bwa_sorted_dedup.wig hg38_chr17.fa
+igvtools count 05-markduplicates/example.dedup.bam example.dedup.wig WGS_data/hg38_chr17.fa
 ```
 
 wig example
@@ -359,7 +368,7 @@ variableStep chrom=chr17 span=25
 
 ### convert an wig file to tiled data format (tdf)
 ```
-igvtools toTDF example_bwa_sorted_dedup.wig example_bwa_sorted_dedup.tdf hg38_chr17.fa
+igvtools toTDF example.dedup.wig example.dedup.tdf WGS_data/hg38_chr17.fa
 ```
 
 ### wig to bigwig
@@ -395,7 +404,7 @@ We can use samtools faidx reference genome and get fai file, then cut the first 
 
 ```
 module load ucsc 
-wigToBigWig example_bwa_sorted_dedup.wig chrom.sizes example_bwa_sorted_dedup.bw
+wigToBigWig example.dedup.wig chrom.sizes example.dedup.bw
 ```
 
 
