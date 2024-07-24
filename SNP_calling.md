@@ -67,7 +67,7 @@ mkdir -p ${OUTDIR_TRIMMOMATIC}
 
 # run trimmomatic
 module load trimmomatic
-java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads 12 \
+java -Djava.io.tmpdir=. -jar $TRIMMOJAR PE -phred33 -threads $THREADS \
     $READ1 $READ2 \
     $OUTDIR_TRIMMOMATIC/${PREFIX}_forward_paired.fq.gz $OUTDIR_TRIMMOMATIC/${PREFIX}_forward_unpaired.fq.gz \
     $OUTDIR_TRIMMOMATIC/${PREFIX}_reverse_paired.fq.gz $OUTDIR_TRIMMOMATIC/${PREFIX}_reverse_unpaired.fq.gz \
