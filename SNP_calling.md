@@ -81,7 +81,7 @@ This will perform the following:
 
    ILLUMINACLIP:fastaWithAdaptersEtc:seed mismatches:palindrome clip threshold:simple clip threshold
    
-● fastaWithAdaptersEtc: specifies the path to a fasta file containing all the adapters, PCR sequences etc. The naming of the various sequences within this file determines how they are used. See below.
+● fastaWithAdaptersEtc: specifies the path to a fasta file containing all the adapters, PCR sequences etc. The naming of the various sequences within this file determines how they are used.
 
 ● seedMismatches: specifies the maximum mismatch count which will still allow a full match to be performed
 
