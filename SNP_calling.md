@@ -222,7 +222,7 @@ sbatch ./06-call_SNPs.sh ./05-markduplicates/example.dedup.bam
 
  Applies the prior and does the actual calling. The -m switch tells the program to use the default calling method, the -v option asks to output only variant sites, finally the -O option selects the output format.
 
-Note: Another popular software for SNP calling is GATK, please refer to https://hpc.nih.gov/training/gatk_tutorial/workflow-overview.html.
+**Note:** Another popular software for SNP calling is GATK, please refer to https://hpc.nih.gov/training/gatk_tutorial/workflow-overview.html.
 
 
 ### 5) Filter SNPs 
