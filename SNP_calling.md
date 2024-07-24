@@ -79,7 +79,7 @@ This will perform the following:
 
 1. Remove adapters (ILLUMINACLIP:TruSeq3-PE.fa:2:30:10)
 
-   ILLUMINACLIP:<fastaWithAdaptersEtc>:<seed mismatches>:<palindrome clip threshold>:<simple clip threshold>
+   ILLUMINACLIP:fastaWithAdaptersEtc:seed mismatches:palindrome clip threshold:simple clip threshold
    
 ● fastaWithAdaptersEtc: specifies the path to a fasta file containing all the adapters, PCR sequences etc. The naming of the various sequences within this file determines how they are used. See below.
 
