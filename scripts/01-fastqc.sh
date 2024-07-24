@@ -1,9 +1,12 @@
 #!/bin/bash
-#SBATCH --cpus-per-task=16
+#SBATCH
 
+# Enter path to read files from STDIN 
 READ1=$1
 READ2=$2
-OUTDIR=Step1-fastqc
+
+# Set name of output directory
+OUTDIR=01-fastqc
 
 # Create output directory
 mkdir -p $OUTDIR
