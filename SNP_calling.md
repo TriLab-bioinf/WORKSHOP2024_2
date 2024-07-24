@@ -15,6 +15,8 @@ ls -lrt /data/$USER/WORKSHOP2024_2/WGS_data/
 
 ### 1) Quality Control
 1.1 Fastqc
+
+Create a script named "01-fastqc.sh" with the following commands.
 ```
 #!/bin/bash
 #SBATCH
@@ -32,7 +34,7 @@ mkdir -p $OUTDIR
 module load fastqc
 fastqc -o $OUTDIR $READ1 $READ2
 ```
-
+Make the script executable with chmod +x 01-fastqc.sh and run it locally like this:
 ```
 export WORKSHOPDIR=/gpfs/gsfs12/users/wangy80/WORKSHOP2024_2
 ./01-fastqc.sh ${WORKSHOPDIR}/WGS_data/example_R1.fastq.gz ${WORKSHOPDIR}/WGS_data/example_R2.fastq.gz
@@ -99,7 +101,8 @@ java -jar trimmomatic-0.35.jar SE -phred33 input.fq.gz output.fq.gz ILLUMINACLIP
 
 BWA is a software package for mapping low-divergent sequences against a large reference genome, such as the human genome. It consists of three algorithms: BWA-backtrack, BWA-SW and BWA-MEM. The first algorithm is designed for Illumina sequence reads up to 100bp, while the rest two for longer sequences ranged from 70bp to 1Mbp. BWA-MEM and BWA-SW share similar features such as long-read support and split alignment, but BWA-MEM, which is the latest, is generally recommended for high-quality queries as it is faster and more accurate. BWA-MEM also has better performance than BWA-backtrack for 70-100bp Illumina reads.
 
-2.1.	Index the reference (genome) sequence 
+2.1.	Index the reference (genome) sequence
+
 Create a script named "03-create_bwa_index.sh" with the following commands.
 ```
 #!/bin/bash
