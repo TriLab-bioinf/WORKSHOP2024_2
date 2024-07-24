@@ -82,14 +82,17 @@ This will perform the following:
    ILLUMINACLIP:<fastaWithAdaptersEtc>:<seed mismatches>:<palindrome clip threshold>:<simple clip threshold>
    
 ● fastaWithAdaptersEtc: specifies the path to a fasta file containing all the adapters, PCR sequences etc. The naming of the various sequences within this file determines how they are used. See below.
+
 ● seedMismatches: specifies the maximum mismatch count which will still allow a full match to be performed
+
 ● palindromeClipThreshold: specifies how accurate the match between the two 'adapter ligated' reads must be for PE palindrome read alignment.
+
 ● simpleClipThreshold: specifies how accurate the match between any adapter etc. sequence must be against a read.
 
-3. Remove leading low quality or N bases (below quality 3) (LEADING:3)
-4. Remove trailing low quality or N bases (below quality 3) (TRAILING:3)
-5. Scan the read with a 4-base wide sliding window, cutting when the average quality per base drops below 15 (SLIDINGWINDOW:4:15)
-6. Drop reads below the 36 bases long (MINLEN:36)
+2. Remove leading low quality or N bases (below quality 3) (LEADING:3)
+3. Remove trailing low quality or N bases (below quality 3) (TRAILING:3)
+4. Scan the read with a 4-base wide sliding window, cutting when the average quality per base drops below 15 (SLIDINGWINDOW:4:15)
+5. Drop reads below the 36 bases long (MINLEN:36)
 
 Make the script executable with chmod +x 02-trim_reads_trimmomatic.sh and run it locally like this:
 
