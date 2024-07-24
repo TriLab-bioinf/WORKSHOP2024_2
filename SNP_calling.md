@@ -364,6 +364,13 @@ chr1    234567  .   A    G,T    .     .       ANN=G|... , T|...
 chr1    123456  .   C    A    .     .      ANN=A|intron_variant&nc_transcript_variant|...
 ```
 3. Putative_impact: A simple estimation of putative impact / deleteriousness : {HIGH, MODERATE, LOW, MODIFIER}
+| **Impact**  | **Meaning** | **Example** |
+| ------------- | ------------- | ------------- |
+| HIGH  | The variant is assumed to have high (disruptive) impact in the protein, probably causing protein truncation, loss of function or triggering nonsense mediated decay. | stop_gained, frameshift_variant |
+| MODERATE  | A non-disruptive variant that might change protein effectiveness. | missense_variant, inframe_deletion |
+| LOW | Assumed to be mostly harmless or unlikely to change protein behavior. | 	synonymous_variant |
+| MODIFIER | Usually non-coding variants or variants affecting non-coding genes, where predictions are difficult or there is no evidence of impact. | exon_variant, downstream_gene_variant |
+
 4. Gene Name: Common gene name (HGNC). Optional: use closest gene when the variant is "intergenic".
 5. Gene ID: Gene ID
 6. Feature type: Which type of feature is in the next field (e.g. transcript, motif, miRNA, etc.). It is preferred to use Sequence Ontology (SO) terms, but 'custom' (user defined) are allowed.
