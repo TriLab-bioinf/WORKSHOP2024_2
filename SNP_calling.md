@@ -406,7 +406,12 @@ chrM    16569
 We can use samtools faidx reference genome and get fai file, then cut the first two columns into chrom.sizes.
 
 ```
-module load ucsc 
+module load samtools
+module load ucsc
+
+samtools faidx WGS_data/hg38_chr17.fa
+cut -f1,2 WGS_data/hg38_chr17.fa.fai >chrom.sizes
+
 wigToBigWig example.dedup.wig chrom.sizes example.dedup.bw
 ```
 
