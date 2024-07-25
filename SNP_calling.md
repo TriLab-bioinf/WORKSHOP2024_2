@@ -37,7 +37,7 @@ fastqc -o $OUTDIR $READ1 $READ2
 ```
 Make the script executable with chmod +x 01-fastqc.sh and run it locally like this:
 ```
-export WORKSHOPDIR=/gpfs/gsfs12/users/wangy80/WORKSHOP2024_2-2
+export WORKSHOPDIR=/gpfs/gsfs12/users/$USER/WORKSHOP2024_2-2
 ./01-fastqc.sh ${WORKSHOPDIR}/WGS_data/example_R1.fastq.gz ${WORKSHOPDIR}/WGS_data/example_R2.fastq.gz
 ```
 
