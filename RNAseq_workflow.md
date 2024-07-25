@@ -332,7 +332,10 @@ A00941:835:H2WLKDRX2:1:2106:14886:24987	99	chr17	213795	255	49M	=	219698	33326	C
 A00941:835:H2WLKDRX2:1:2106:14886:24987	147	chr17	219698	255	39M27374N10M	=	213795	-33326	AGCTAAGATCCGAGTCACTGTCACTGTCACTGGAAACCACTCTTCCTCG	F:FFFF::FFFFFFFFF:FF:FFFFFFF:FFFFFFFFFFFFFF,FFFFF	NH:i:1	HI:i:1	AS:i:96	nM:i:0	NM:i:0	MD:Z:49	jM:B:c,22	jI:B:i,219737,247110	MC:Z:49M
 ```
 **Example of spliced read aligment**
+
 ![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/Slide1.png)
+
+To find out the significance of specific FLAGS in column 2 of the sam/bam files you can use the following tool: [Decoding SAM flags](https://broadinstitute.github.io/picard/explain-flags.html)
 
 **Note:** Another popular mapper for RNAseq analysis is [HISAT2](https://daehwankimlab.github.io/hisat2/).
 
