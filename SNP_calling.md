@@ -6,6 +6,7 @@
 
 ```
 ssh $USER@helix.nih.gov
+mkdir /data/$USER/WORKSHOP2024_2-2
 cp -r /scratch/wangy80/WGS_data /data/$USER/WORKSHOP2024_2-2/WGS_data
 
 # Check that the "data" directory has been copied just fine
