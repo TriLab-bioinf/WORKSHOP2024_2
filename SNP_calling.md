@@ -420,8 +420,7 @@ chr1    123456  .   C    A    .     .      ANN=A|intron_variant&nc_transcript_va
 ### wig: computes average alignment or feature density for over a specified window size across the genome
 ```
 module load IGVTools
-igvtools --memory 20g
-igvtools count 05-markduplicates/example.dedup.bam example.dedup.wig WGS_data/hg38_chr17.fa
+igvtools --memory 20g count 05-markduplicates/example.dedup.bam example.dedup.wig WGS_data/hg38_chr17.fa
 ```
 
 wig example
