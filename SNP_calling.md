@@ -6,7 +6,7 @@
 
 ```
 ssh $USER@helix.nih.gov
-cp -r /scratch/wangy80/WGS_data /data/$USER/WORKSHOP2024_2/
+cp -r /scratch/wangy80/WGS_data /data/$USER/WORKSHOP2024_2/WGS_data
 
 # Check that the "data" directory has been copied just fine
 ls -lrt /data/$USER/WORKSHOP2024_2/WGS_data/
