@@ -326,7 +326,11 @@ A00941:835:H2WLKDRX2:1:2115:12048:34601	99	chr17	59992	255	50M	=	60037	95	ACCGGC
 
 An in-depth description of what information is stored in each column can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
  
-
+For RNAseq data, reads spanning a splice junction are represented by Ns in the CIGAR string of the sam/bam file (column 6) with a length equal to the span of the intronic region. For instance:
+```
+A00941:835:H2WLKDRX2:1:2106:14886:24987	99	chr17	213795	255	49M	=	219698	33326	CGGGCAGGGTCTGGCAGGAATCCTCCACAGGGAAGTCTGTTCCAGGCAC	FFFFFFFFFFFFFFFFFFFFFFFFFFFF,FFFFFFFFFFFFFFFFFFFF	NH:i:1	HI:i:1	AS:i:96	nM:i:0	NM:i:0	MD:Z:49	jM:B:c,-1	jI:B:i,-1	MC:Z:39M27374N10M
+A00941:835:H2WLKDRX2:1:2106:14886:24987	147	chr17	219698	255	39M27374N10M	=	213795	-33326	AGCTAAGATCCGAGTCACTGTCACTGTCACTGGAAACCACTCTTCCTCG	F:FFFF::FFFFFFFFF:FF:FFFFFFF:FFFFFFFFFFFFFF,FFFFF	NH:i:1	HI:i:1	AS:i:96	nM:i:0	NM:i:0	MD:Z:49	jM:B:c,22	jI:B:i,219737,247110	MC:Z:49M
+```
 
 **Note:** Another popular mapper for RNAseq analysis is [HISAT2](https://daehwankimlab.github.io/hisat2/).
 
