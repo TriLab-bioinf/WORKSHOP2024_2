@@ -6,10 +6,10 @@
 
 ```
 ssh $USER@helix.nih.gov
-cp -r /scratch/wangy80/WGS_data /data/$USER/WORKSHOP2024_2/WGS_data
+cp -r /scratch/wangy80/WGS_data /data/$USER/WORKSHOP2024_2-2/WGS_data
 
 # Check that the "data" directory has been copied just fine
-ls -lrt /data/$USER/WORKSHOP2024_2/WGS_data/
+ls -lrt /data/$USER/WORKSHOP2024_2-2/WGS_data/
 
 ```
 
@@ -36,7 +36,7 @@ fastqc -o $OUTDIR $READ1 $READ2
 ```
 Make the script executable with chmod +x 01-fastqc.sh and run it locally like this:
 ```
-export WORKSHOPDIR=/gpfs/gsfs12/users/wangy80/WORKSHOP2024_2
+export WORKSHOPDIR=/gpfs/gsfs12/users/wangy80/WORKSHOP2024_2-2
 ./01-fastqc.sh ${WORKSHOPDIR}/WGS_data/example_R1.fastq.gz ${WORKSHOPDIR}/WGS_data/example_R2.fastq.gz
 ```
 
