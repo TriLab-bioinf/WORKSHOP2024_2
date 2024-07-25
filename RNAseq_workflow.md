@@ -459,7 +459,7 @@ featureCounts -G ${GENOME} -T ${THREADS}\
 ```
 Now run the script using the following command:
 ```
-sbatch ./07-feature_counts.sh ./Step5-markduplicates/example.dedup.bam
+sbatch ./07-feature_counts.sh ./Step6-markduplicates/example.dedup.bam
 ```
 Within the `Step7-read_counts` output directory, you will find a file named `read_counts.txt`  containing the read counts per feature, that can be imported into R for differential gene expression analysis. Also, you will find a second file named `read_counts.txt.summary` that contains a summary of the reads that were mapped or not to thhe genome features of interest.
 
