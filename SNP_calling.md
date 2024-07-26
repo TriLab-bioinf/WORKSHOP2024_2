@@ -15,7 +15,7 @@ ls -lrt /data/$USER/WORKSHOP2024_2-2/WGS_data/
 ```
 
 ### 1) Quality Control
-1.1 Fastqc
+#### 1.1 Fastqc
 
 Create a script named "01-fastqc.sh" with the following commands.
 ```
@@ -46,7 +46,7 @@ Enter **smb://hpcdrive.nih.gov/data**
 
 press **Connect** to see the fastqc outputs.
 
-1.2 Trimming reads with trimmomatic
+#### 1.2 Trimming reads with trimmomatic
 
 Create the script 02-trim_reads_trimmomatic.sh with the following code:
 
