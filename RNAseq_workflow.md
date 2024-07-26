@@ -325,6 +325,7 @@ A00941:835:H2WLKDRX2:1:2115:12048:34601	99	chr17	59992	255	50M	=	60037	95	ACCGGC
 ```
 The first 11 columns of the SAM/BAM file contain the following information:
 ![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/SAM_fileds.png)
+
 *From: SAM (file format). Wikipedia. https://en.wikipedia.org/wiki/SAM_(file_format)*
 
 A more in-depth description of what information is stored in each column can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
