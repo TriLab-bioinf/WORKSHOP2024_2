@@ -248,24 +248,6 @@ sbatch ./06-call_SNPs.sh ./05-markduplicates/example.dedup.bam
 
 **Note:** Another popular software for SNP calling is GATK, please refer to https://hpc.nih.gov/training/gatk_tutorial/workflow-overview.html.
 
-
-### 5) Filter SNPs 
-Variant filtering is not easy. The variant callers provide a quality score (the QUAL) column, which gives an estimate of how likely it is to observe a call purely by chance. An easy way to filter low quality calls is
-```
-module load bcftools
-bcftools filter -e 'QUAL<20' 06-SNPcalling/example.vcf.gz -O z -o 06-SNPcalling/my.var-final.vcf.gz
-```
-
-Other useful metrics are:
-
-● sequencing depth (DP bigger than twice the average depth indicates problematic regions and is often enriched for artefacts)
-
-● the minimum number of high-quality non-reference reads
-
-● proximity to indels (bcftools filter -g)
-
-● etc.
-
 ## VCF file formats
 ```
 ##fileformat=VCFv4.2
@@ -329,6 +311,22 @@ Information about the following columns - The GT in the FORMAT column tells us t
 
 Individual identifier: The previous column told us to expect to see genotypes here. The genotype is in the form 0|1, where 0 indicates the reference allele and 1 indicates the alternative allele, i.e it is heterozygous.
 
+### 5) Filter SNPs 
+Variant filtering is not easy. The variant callers provide a quality score (the QUAL) column, which gives an estimate of how likely it is to observe a call purely by chance. An easy way to filter low quality calls is
+```
+module load bcftools
+bcftools filter -e 'QUAL<20' 06-SNPcalling/example.vcf.gz -O z -o 06-SNPcalling/my.var-final.vcf.gz
+```
+
+Other useful metrics are:
+
+● sequencing depth (DP bigger than twice the average depth indicates problematic regions and is often enriched for artefacts)
+
+● the minimum number of high-quality non-reference reads
+
+● proximity to indels (bcftools filter -g)
+
+● etc.
 
 ### 6) SNP annotations
 SnpEff: Genetic variant annotation, and functional effect prediction toolbox. It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
