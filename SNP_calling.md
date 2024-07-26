@@ -40,13 +40,11 @@ Make the script executable with chmod +x 01-fastqc.sh and run it locally like th
 export WORKSHOPDIR=/gpfs/gsfs12/users/$USER/WORKSHOP2024_2-2
 ./01-fastqc.sh ${WORKSHOPDIR}/WGS_data/example_R1.fastq.gz ${WORKSHOPDIR}/WGS_data/example_R2.fastq.gz
 ```
-Then for Macs, you can go to Finder > Go > Connect to Server
+Then for Macs, you can go to **Finder > Go > Connect** to Server
 
-Enter smb://hpcdrive.nih.gov/data
+Enter **smb://hpcdrive.nih.gov/data**
 
-press Connect
-
-to see the fastqc outputs.
+press **Connect** to see the fastqc outputs.
 
 1.2 Trimming reads with trimmomatic
 
