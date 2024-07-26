@@ -323,8 +323,11 @@ SAM/BAM files can be visualized with the command `samtools view <BAM_FILE>`. The
 A00941:835:H2WLKDRX2:1:2271:9200:35524	99	chr17	59989	255	50M	=	60092	153	TGTGCCGGCCCTGATCATGCAGCTCTTCCAGGCCCACTGCTTCTTCCTGT	,FFFFFFFFFFFFFFFFFFFFFFFFF:FFFFFFFFFFFFFFFFFFFFFFF	NH:i:1	HI:i:1	AS:i:84	nM:i:1	NM:i:12	MD:Z:0N0N0N0N0N0N0N0N0N0N0N0N38	jM:B:c,-1	jI:B:i,-1	MC:Z:50M	RG:Z:RG1
 A00941:835:H2WLKDRX2:1:2115:12048:34601	99	chr17	59992	255	50M	=	60037	95	ACCGGCCCTGATCATGCAGCTCTTCCAGGCCCACTGCTTCTTCCTGTCCA	,FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,FFF	NH:i:1	HI:i:1	AS:i:87	nM:i:1	NM:i:9	MD:Z:0N0N0N0N0N0N0N0N0N41	jM:B:c,-1	jI:B:i,-1	MC:Z:50M	RG:Z:RG1
 ```
+The first 11 columns of the SAM/BAM file contain the following information:
+![](https://github.com/TriLab-bioinf/WORKSHOP2024_2/blob/main/figures/SAM_fileds.png)
+*From: SAM (file format). Wikipedia. https://en.wikipedia.org/wiki/SAM_(file_format)*
 
-An in-depth description of what information is stored in each column can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
+A more in-depth description of what information is stored in each column can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
  
 For RNAseq data, reads spanning a splice junction are represented by Ns in the CIGAR string of the sam/bam file (column 6) with a length equal to the span of the intronic region. For instance:
 ```
